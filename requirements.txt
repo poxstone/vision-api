@@ -1,2 +1,5 @@
+Flask==1.0.2
 google-cloud-vision
-protobuf
+#google-auth
+#google-api-python-client
+oauth2client==3.0.0

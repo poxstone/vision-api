@@ -5,3 +5,4 @@ lib/*
 *.sw[mnop]
 .code
 __pycache__/*
+credential.json

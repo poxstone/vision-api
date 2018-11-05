@@ -1,5 +1,27 @@
-# INSTALLATION
+# Vison API app engine standar Python 3.7
+
+## Installation
+
+Require:
+- Python 2.7 for run app engine
+- Python 3.7 for code
+- pip
+
+
 ```bash
-pip install -r requirements.txt -t lib --upgrade;
-export GOOGLE_APPLICATION_CREDENTIALS="$(PWD)/poxgolden-358eea9146ff.json";
+python3.7 pip install -r requirements.txt -t lib --upgrade;
+```
+## Run
+
+```bash
+# Enviroment var is not working currently
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/credential.json";
+
+dev_appserver.py ./;
+```
+
+## Deploy
+
+```bash
+ gcloud app deploy ./;
 ```

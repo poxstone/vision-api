@@ -1,0 +1,16 @@
+runtime: python37
+
+#api_version: 1
+#threadsafe: true
+
+#handlers:
+#- url: .*
+#  script: main.app
+
+#libraries:
+#- name: ssl
+#  version: latest
+
+inbound_services:
+- warmup
+
