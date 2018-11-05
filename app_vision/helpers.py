@@ -36,7 +36,7 @@ class VisionHelper:
         # Get tags
         labels = []
         for label in response.label_annotations:
-            labels.append(label.description)
+            labels.append(label)
 
         return labels
 
@@ -51,11 +51,9 @@ class VisionHelper:
         for color in props.dominant_colors.colors:
             properties_color = {
                 'pixel_fraction': color.pixel_fraction,
-                'color_red': color.color.red,
-                'color_green': color.color.green,
-                'color_blue': color.color.blue,
-                'color_alpha': color.color.alpha
-            }
+                'rgb': 'rgb({},{},{})'.format(color.color.red,
+                                                   color.color.green,
+                                                   color.color.blue)}
             logging.info(properties_color)
             arr_color.append(properties_color)
 

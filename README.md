@@ -9,7 +9,7 @@ Require:
 
 
 ```bash
-python3.7 pip install -r requirements.txt -t lib --upgrade;
+python3.7 -m pip install -r requirements.txt -t lib --upgrade;
 ```
 ## Run
 

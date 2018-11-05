@@ -26,7 +26,7 @@ def hello():
     response_face = visionApi.getFace(bucket_img)
 
     # Response
-    return 'Response [{}] == [{}] == [{}]'.format(
+    return 'Response [{}] \n\n [{}] \n\n [{}]'.format(
         str(response_color), str(response_labels), str(response_face))
 
 
