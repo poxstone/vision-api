@@ -2,16 +2,11 @@ import os, io
 import logging
 
 from google.cloud import vision
-from google.cloud.vision import types
-
 
 class VisionHelper:
 
     def __init__(self):
         self.client = vision.ImageAnnotatorClient()
-
-    for i in vision.enums.Feature.Type:
-        print(str(i))
 
     @staticmethod
     def readImage(img_path):

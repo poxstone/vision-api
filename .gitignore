@@ -6,3 +6,5 @@ lib/*
 .code
 __pycache__/*
 credential.json
+**/constants.py
+**/constants.js

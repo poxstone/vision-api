@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from flask.templating import render_template
 from app_vision.helpers import VisionHelper
 from app_vision.constants import BUCKET, CREDENTIAL_JSON, ROOT_PATH
 
@@ -10,13 +10,16 @@ from app_vision.constants import BUCKET, CREDENTIAL_JSON, ROOT_PATH
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ROOT_PATH + '/' + CREDENTIAL_JSON
 
 # Run flask
-app = Flask(__name__)
-
+app = Flask(__name__, static_url_path='')
 
 @app.route('/')
-def hello():
+def root():
+    return render_template('index.html')
 
-    img_bucket = BUCKET + '/images/tomaco_man.jpg'
+
+@app.route('/get-image/<image_name>')
+def getImage(image_name):
+    img_bucket = BUCKET + '/images/' + image_name
 
     # Init Api
     visionApi = VisionHelper()
