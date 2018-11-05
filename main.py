@@ -21,12 +21,13 @@ def hello():
 
     # Init Api
     visionApi = VisionHelper()
+    response_color = visionApi.getImageProperties(img_local)
     response_labels = visionApi.getLocalLabels(img_local)
     response_face = visionApi.getFace(bucket_img)
 
     # Response
-    return 'Response [{}] ==== [{}]'.format(str(response_labels ),
-                                            str(response_face))
+    return 'Response [{}] == [{}] == [{}]'.format(
+        str(response_color), str(response_labels), str(response_face))
 
 
 # Run app
