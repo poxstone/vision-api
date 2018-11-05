@@ -10,6 +10,9 @@ class VisionHelper:
     def __init__(self):
         self.client = vision.ImageAnnotatorClient()
 
+    for i in vision.enums.Feature.Type:
+        print(str(i))
+
     @staticmethod
     def readImage(img_path):
         file_name = os.path.join(os.path.dirname(__file__), img_path)
@@ -25,26 +28,19 @@ class VisionHelper:
 
         return response
 
-    def getLocalLabels(self, img_path):
-        content = self.readImage(img_path)
-        image = types.Image(content=content)
-
-        # Analyze image
-        response = self.client.label_detection(image=image)
+    def getLocalLabels(self, bucket_img):
+        response = self.client.annotate_image({
+            'image': {'source': {'image_uri': bucket_img}},
+            'features': [{'type': vision.enums.Feature.Type.LABEL_DETECTION}]})
         logging.info('Labels RESPONSE: [%s]', response)
 
-        # Get tags
-        labels = []
-        for label in response.label_annotations:
-            labels.append(label)
+        return response
 
-        return labels
+    def getImageProperties(self, bucket_img):
+        response = self.client.annotate_image({
+            'image': {'source': {'image_uri': bucket_img}},
+            'features': [{'type': vision.enums.Feature.Type.IMAGE_PROPERTIES}]})
 
-    def getImageProperties(self, img_path):
-        content = self.readImage(img_path)
-        image = types.Image(content=content)
-
-        response = self.client.image_properties(image=image)
         props = response.image_properties_annotation
 
         arr_color = []

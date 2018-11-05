@@ -16,14 +16,13 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
 
-    bucket_img = BUCKET + '/images/tomaco_man.jpg'
-    img_local = ROOT_PATH + '/resources/tomaco_man.jpg'
+    img_bucket = BUCKET + '/images/tomaco_man.jpg'
 
     # Init Api
     visionApi = VisionHelper()
-    response_color = visionApi.getImageProperties(img_local)
-    response_labels = visionApi.getLocalLabels(img_local)
-    response_face = visionApi.getFace(bucket_img)
+    response_color = visionApi.getImageProperties(img_bucket)
+    response_labels = visionApi.getLocalLabels(img_bucket)
+    response_face = visionApi.getFace(img_bucket)
 
     # Response
     return 'Response [{}] \n\n [{}] \n\n [{}]'.format(
