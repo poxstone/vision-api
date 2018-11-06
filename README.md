@@ -13,6 +13,7 @@
 - **Python 2.7** for run App Engine local
 - **Python 3.7** for run code
 - **pip** to install python dependences
+- **Browser file API** ((doc)[https://www.html5rocks.com/es/tutorials/file/dndfiles/])
 
 
 ```bash
