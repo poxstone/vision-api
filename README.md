@@ -35,11 +35,22 @@ python3.7 -m pip install -r requirements.txt -t lib --upgrade;
     const BUCKET_DIR = 'sub_directory';
     
     ```
+- **config.py**
+    ```python
+    import os, sys
+
+    from app_vision.constants import CREDENTIAL_JSON
+
+    # For local debug
+    ROOT_PATH = sys.path[0]
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ROOT_PATH + '/' + CREDENTIAL_JSON
+
+    PROJECT_ID = '<PROJEC_ID>'
+    DATA_BACKEND = 'datastore'
+    ```
+
 - **app_vision/constants.py**
     ```python
-    import sys
-
-    ROOT_PATH = sys.path[0]
     BUCKET_DIR = 'sub_directory'
     BUCKET = 'gs://<PROJEC_ID>.appspot.com/' + BUCKET_DIR
     CREDENTIAL_JSON = 'credential.json'

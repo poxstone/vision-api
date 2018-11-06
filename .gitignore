@@ -8,3 +8,4 @@ __pycache__/*
 credential.json
 **/constants.py
 **/constants.js
+**/config.py
