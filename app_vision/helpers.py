@@ -1,10 +1,13 @@
 import os, io
 import logging
+import argparse
+import datetime
 
 from google.cloud import vision
+from google.cloud import datastore
+
 
 class VisionHelper:
-
     def __init__(self):
         self.client = vision.ImageAnnotatorClient()
 
@@ -60,3 +63,26 @@ class VisionHelper:
             arr_color.append(properties_color)
 
         return arr_color
+
+
+class DatastoreHelper:
+    """
+    https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/datastore/cloud-client/tasks.py
+    """
+    def __init__(self, project_id):
+        self.client = datastore.Client(project_id)
+
+
+    def add_task(self, client, description):
+        key = client.key('Task')
+        task = datastore.Entity(key, exclude_from_indexes=['description'])
+
+        task.update({
+            'created': datetime.datetime.utcnow(),
+            'description': description,
+            'done': False
+        })
+
+        client.put(task)
+
+        return task.key
