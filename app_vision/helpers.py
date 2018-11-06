@@ -19,17 +19,28 @@ class VisionHelper:
     def getFace(self, bucket_img):
         response = self.client.annotate_image({
             'image': {'source': {'image_uri': bucket_img}},
-            'features': [{'type': vision.enums.Feature.Type.FACE_DETECTION}], })
+            'features': [{'type': vision.enums.Feature.Type.FACE_DETECTION}]})
 
-        return response
+        face_response = []
+        for label in response.face_annotations:
+            face_response.append(label)
+
+        return face_response
 
     def getLocalLabels(self, bucket_img):
         response = self.client.annotate_image({
             'image': {'source': {'image_uri': bucket_img}},
             'features': [{'type': vision.enums.Feature.Type.LABEL_DETECTION}]})
-        logging.info('Labels RESPONSE: [%s]', response)
 
-        return response
+        label_response = []
+        for label in response.label_annotations:
+            label_response.append({
+                'label': label.description,
+                'score': label.score,
+                'topicality': label.topicality
+            })
+
+        return label_response
 
     def getImageProperties(self, bucket_img):
         response = self.client.annotate_image({

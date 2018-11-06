@@ -14,58 +14,15 @@
     <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
 
     <script src="/static/js/constants.js"></script>
+    <script src="/static/js/scripts.js"></script>
+    
 </head>
 <body>
     <h1>Welcome to AppVision</h1>
     <button type="button" onclick="login(event)" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Login</button>
-    <input type="file" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-    onchange="handleFileSelect(event)" \>
-
-    <script>
-        // Initialize Firebase
-        firebase.initializeApp(FIREBASE_CONFIG);
-
-         /*loging*/
-        function login(event) {
-            firebase.auth().signInAnonymously().then((response) => {
-                console.log('click_login:', response);
-            }).catch((error) => {
-                console.log('error_loging: ', error);
-            });
-        }
-        
-
-        /*STORAGE*/
-        var storageRef = firebase.storage().ref();
-        var imagesRef = storageRef.child('images');
-
-        function uploadImage(file) {
-            var storageRef = firebase.storage().ref();
-            var mountainImagesRef = storageRef.child('images/mountains.jpg');
-            console.log(mountainImagesRef.fullPath);
-
-            mountainImagesRef.put(file).then(function(snapshot) {
-                console.log('Uploaded a blob or file!', snapshot);
-            });
-        }
-
-        // Load files
-        function handleFileSelect(evt) {
-            var files = evt.target.files;
-            for (let i = 0, fileToLoad; fileToLoad = files[i]; i++) {
-                console.log('File_to_read', fileToLoad);
-
-                var reader = new FileReader();
-                reader.onload = ((fileLoaded) => (event) => {
-                    console.log('File_reader_target_bloop: ', event.target.result, 'File_reader_fileLoaded: ', fileLoaded);
-                    uploadImage(event.target.result);
-                    
-                })(fileToLoad);
-
-                reader.readAsArrayBuffer(fileToLoad);
-            }
-        }
-
-    </script>
+    <input type="file" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onchange="handleFileSelect(event)" \>
+    <hr>
+    <p id="result">---</p>
+    
 </body>
 </html>

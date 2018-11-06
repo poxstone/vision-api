@@ -32,13 +32,16 @@ python3.7 -m pip install -r requirements.txt -t lib --upgrade;
         storageBucket: "<PROJEC_ID>.appspot.com",
         messagingSenderId: "000..."
     };
+    const BUCKET_DIR = 'sub_directory';
+    
     ```
 - **app_vision/constants.py**
     ```python
     import sys
 
     ROOT_PATH = sys.path[0]
-    BUCKET = 'gs://<PROJEC_ID>.appspot.com/'
+    BUCKET_DIR = 'sub_directory'
+    BUCKET = 'gs://<PROJEC_ID>.appspot.com/' + BUCKET_DIR
     CREDENTIAL_JSON = 'credential.json'
     ```
 - **credential.json**
