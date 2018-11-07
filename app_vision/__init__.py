@@ -4,8 +4,8 @@ import json
 from flask import Flask
 from flask.templating import render_template
 
-from app_vision.helpers import VisionHelper
-from app_vision.constants import BUCKET
+from helpers import VisionHelper
+from constants import BUCKET, PROJECT_ID
 
 
 # Run flask
@@ -33,9 +33,34 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         # Response
         try:
             response = json.dumps(response_json)
-        except:
+        except Exception as e:
+            logging.warn('warning_return_json_not_support_2_agumentes[%s]', e)
             response = json.dumps(response_json, 'utf8')
 
         return response
 
+    @app.route('/add/<user>', methods=['GET', 'POST'])
+    def add(user):
+        from models import FirestoreHelper
+
+        fire_db = FirestoreHelper(PROJECT_ID)
+        result_a = fire_db.addData(u'users', user, {
+            u'first': u'Alan',
+            u'middle': u'Mathison',
+            u'last': u'Turing',
+            u'born': 1912
+        })
+
+        print('--------' + str(result_a))
+
+        # read data
+        docs = fire_db.getData(u'users')
+
+        docs_arr = ""
+        for doc in docs:
+            docs_arr += u'{} => {}'.format(doc.id, doc.to_dict())
+
+        return docs_arr
+
     return app
+
