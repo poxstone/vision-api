@@ -1,6 +1,5 @@
 import logging
 import json
-import config
 
 from flask import Flask
 from flask.templating import render_template
@@ -33,9 +32,11 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         }
 
         # Response
-        return json.dumps(response_json, 'utf8')
+        try:
+            response = json.dumps(response_json)
+        except:
+            response = json.dumps(response_json, 'utf8')
 
-   
+        return response
 
     return app
-     

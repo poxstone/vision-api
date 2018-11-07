@@ -31,36 +31,45 @@ class VisionHelper:
         return face_response
 
     def getLocalLabels(self, bucket_img):
-        response = self.client.annotate_image({
-            'image': {'source': {'image_uri': bucket_img}},
-            'features': [{'type': vision.enums.Feature.Type.LABEL_DETECTION}]})
+        try:
+            response = self.client.annotate_image({
+                'image': {'source': {'image_uri': bucket_img}},
+                'features': [{'type': vision.enums.Feature.Type.LABEL_DETECTION}]})
 
-        label_response = []
-        for label in response.label_annotations:
-            label_response.append({
-                'label': label.description,
-                'score': label.score,
-                'topicality': label.topicality
-            })
+            label_response = []
+            for label in response.label_annotations:
+                label_response.append({
+                    'label': label.description,
+                    'score': label.score,
+                    'topicality': label.topicality
+                })
+        except Exception as e:
+            logging.error('error_getLocalLabels_[%s]', e)
+            label_response = ["error on load getLocalLabels"]
 
         return label_response
 
     def getImageProperties(self, bucket_img):
-        response = self.client.annotate_image({
-            'image': {'source': {'image_uri': bucket_img}},
-            'features': [{'type': vision.enums.Feature.Type.IMAGE_PROPERTIES}]})
+        try:
+            response = self.client.annotate_image({
+                'image': {'source': {'image_uri': bucket_img}},
+                'features': [{'type': vision.enums.Feature.Type.IMAGE_PROPERTIES}]})
 
-        props = response.image_properties_annotation
+            props = response.image_properties_annotation
 
-        arr_color = []
-        for color in props.dominant_colors.colors:
-            properties_color = {
-                'pixel_fraction': color.pixel_fraction,
-                'rgb': 'rgb({},{},{})'.format(color.color.red,
-                                                   color.color.green,
-                                                   color.color.blue)}
-            logging.info(properties_color)
-            arr_color.append(properties_color)
+            arr_color = []
+            for color in props.dominant_colors.colors:
+                properties_color = {
+                    'pixel_fraction': color.pixel_fraction,
+                    'rgb': 'rgb({},{},{})'.format(color.color.red,
+                                                       color.color.green,
+                                                       color.color.blue)}
+                logging.info(properties_color)
+                arr_color.append(properties_color)
+
+        except Exception as e:
+            logging.error('error_getImageProperties_[%s]', e)
+            arr_color = ["error on load getImageProperties"]
 
         return arr_color
 
