@@ -1,0 +1,103 @@
+html, body {
+    background: #222;
+    color: #ccc;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.header-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    padding: 10px;
+}
+
+.header-cont h1 {
+    font-size: 32px;
+    color: rgba(255,255,255,0.33);
+    margin: 0;
+    padding: 0;
+}
+
+.main-cont {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    rigth: 0px;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.main-cont .camera-cont {
+
+}
+
+.main-cont .legend-cont:empty {
+    display: none;
+}
+.main-cont .legend-cont {
+    background: rgba(0,0,0,0.8);
+    position: absolute;
+    padding: 4px;
+    z-index: 4;
+    left: 15px;
+    right: 15px;
+    top: 80px;
+    bottom: 80px;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,0.5) 0 0 12px 2px;
+}
+
+.main-cont .camera-cont video,
+.main-cont .camera-cont canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px
+}
+.main-cont .camera-cont video {
+    background: rgba(80,80,80,0.75);
+    z-index: 2;
+}
+.main-cont .camera-cont canvas {
+    background: rgba(84, 47, 21, 0.5);
+    z-index: 1;
+}
+
+.mdl-button--fab,
+.mdl-button--fab:hover {
+    background: gray;
+}
+
+.controls-cont {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 8;
+    left: auto;
+}
+
+.controls-cont .sub-menu {
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.controls-cont .sub-menu label,
+.controls-cont .sub-menu button {
+    margin: 4px;
+}
+
+.controls-cont .sub-menu label input{
+    height: 1px;
+    width: 1px;
+    position: absolute;
+    left: -100px;
+    top: -100px;
+    opacity: 0.1;
+}

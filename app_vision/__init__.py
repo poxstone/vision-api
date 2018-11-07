@@ -9,7 +9,6 @@ from app_vision.constants import BUCKET
 
 
 # Run flask
-
 def create_app(config, debug=False, testing=False, config_overrides=None):
     app = Flask(__name__)
 

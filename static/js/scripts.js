@@ -25,7 +25,7 @@ function getImageInfo(imageName) {
             for (let indx=0;indx < response.labels.length; indx++ ) {
                 responseStr += `<li><b>${labels[indx].label}</b>: ${labels[indx].score}% </li>`;
             }
-            
+
             document.getElementById("result").innerHTML = `<ul>${responseStr}</ul>`;
         }
     };
@@ -59,9 +59,37 @@ function handleFileSelect(evt) {
         reader.onload = ((fileLoaded) => (event) => {
             console.log('File_reader_target_bloop: ', event.target.result, 'File_reader_fileLoaded: ', fileLoaded);
             uploadImage(event.target.result, fileToLoad.name);
-            
+
         })(fileToLoad);
 
         reader.readAsArrayBuffer(fileToLoad);
     }
 }
+
+// camera
+var video = document.getElementById('video');
+// Get access to the camera!
+if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  // Not adding `{ audio: true }` since we only want video now
+  navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+
+    try {
+      video.srcObject = stream;
+    } catch (error) {
+      video.src = window.URL.createObjectURL(stream);
+    }
+
+    video.play();
+  });
+}
+
+
+function takePicture() {
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+	context.drawImage(video, 0, 0, 640, 480);
+	var jpegUrl = canvas.toDataURL("image/jpeg");
+	console.log("Hola", jpegUrl);
+
+};
