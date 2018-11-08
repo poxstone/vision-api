@@ -9,3 +9,5 @@ credential.json
 **/constants.py
 **/constants.js
 **/config.py
+client_secret_*.json
+
