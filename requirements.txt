@@ -2,3 +2,8 @@ Flask==1.0.2
 google-cloud-vision==0.34.0
 oauth2client==3.0.0
 firebase-admin
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+requests

@@ -1,7 +1,7 @@
 import logging
 import json
 
-from flask import Flask, request, redirect
+from flask import Flask
 from flask.templating import render_template
 from .models import FirestoreHelper
 
@@ -15,7 +15,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/')
     def root():
-        print (globals())
+        print( config['ROOT_PATH'] + '/' + CLIENT_SECRET )
         return render_template('index.html')
 
     @app.route('/get-image/<image_name>')
@@ -83,35 +83,27 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/installation', methods=['GET', 'POST'])
     def installation():
-        # https://developers.google.com/identity/protocols/OAuth2WebServer
-        import google_auth_oauthlib.flow
-        import sys
+      import google.oauth2.credentials
+      import google_auth_oauthlib.flow
 
-        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-              sys.path[0] + '/' + CLIENT_SECRET,
-            scopes=['profile', 'email',
-                    'https://www.googleapis.com/auth/spreadsheets.readonly',
-                    'https://www.googleapis.com/auth/drive.readonly'],
-            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+      flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+              config['ROOT_PATH'] + '/' + CLIENT_SECRET,
+              scope=['https://www.googleapis.com/auth/drive.metadata.readonly'])
 
-        protocol = 'https' if request.url.startswith('https://') else 'http'
+      flow.redirect_uri = 'https://localhost:8080/oauth2callback'
 
-        flow.redirect_uri =  '{}://{}/oauth2callback'.format(protocol,
-                                                                request.host)
+      authorization_url, state = flow.authorization_url(
+          # re-prompting the user for permission. Recommended for web server apps.
+          access_type='offline',
+          include_granted_scopes='true')
 
-        authorization_url, state = flow.authorization_url(
-            access_type='offline',
-            include_granted_scopes='true')
 
-        return redirect(authorization_url)
+      return "exito"
 
     @app.route('/oauth2callback', methods=['GET', 'POST'])
     def oauth2callback():
-        print(request.args)
-        return str(request.args)
+
+      return "exito"
 
     return app
 
-#state=Ob9Wa5e1hgUhUWx40RUFbcBIZnRq2X
-#code=4/jwBSFc2Rr9ki8kj_MOk7Ek54SUwX_-DXXGdSDO84nbLe9pLkcsU3bR75JmD7VBAm9S5uCToR3EvlFnEp37X1kNU
-#scope=email%20profile%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email
