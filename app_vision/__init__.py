@@ -5,10 +5,15 @@ import json
 from flask import Flask, request, redirect
 from flask.templating import render_template
 import google_auth_oauthlib.flow
+import google.oauth2.credentials
+from requests_oauthlib import OAuth2Session
+import httplib2
 
+from apiclient import discovery
 from .models import FirestoreHelper
-from .helpers import VisionHelper
-from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET
+from .helpers import VisionHelper, Oauth2Helper
+from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_JSON, CLIENT_ID, \
+    CLIENT_SECRET, CLIENT_SECRET, SCOPES
 
 
 # Run flask
@@ -77,12 +82,11 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     @app.route('/installation', methods=['GET', 'POST'])
     def installation():
         # https://developers.google.com/identity/protocols/OAuth2WebServer
+        #https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example_with_refresh.html
 
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-            sys.path[0] + '/' + CLIENT_SECRET,
-            scopes=['profile', 'email',
-                    'https://www.googleapis.com/auth/spreadsheets.readonly',
-                    'https://www.googleapis.com/auth/drive.readonly'],
+            sys.path[0] + '/' + CLIENT_SECRET_JSON,
+            scopes=SCOPES,
             redirect_uri='urn:ietf:wg:oauth:2.0:oob')
 
         protocol = 'https' if request.url.startswith('https://') else 'http'
@@ -101,8 +105,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     def oauth2callback():
         fire_db = FirestoreHelper(PROJECT_ID)
         return_db = fire_db.addData(u'config', 'oauth2', {
-                   'refresh': request.args['state'],
-                   'token': request.args['code'],
+                   'state': request.args['state'],
+                   'code': request.args['code'],
                    'scope': request.args['scope']
                   })
         logging.info('imstall_params[%s]', return_db)
@@ -111,19 +115,36 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     @app.route('/sheet/')
     def getSheet():
         fire_db = FirestoreHelper(PROJECT_ID)
-        configurations = fire_db.getData(u'config')
+        config = fire_db.getData(u'config')['oauth2']
+
+        # TODO: create refresh token
+
+        #auth
+        refresh=config['refresh']
+        access_token = Oauth2Helper.refresh_access_token(CLIENT_ID,
+                                               CLIENT_SECRET, refresh)
+
+        credential = Oauth2Helper.get_credentials(access_token)
+        #http = credential.authorize(httplib2.Http())
+        #credential.refresh(http)
+
+        print('credential: ' + str(credential))
+
+        service = discovery.build('drive', 'v3', credentials=credential)
+        google_request = service.files().list()
+        result = google_request.execute()
+
+
+        print(result)
 
         # Response
         try:
-            response = json.dumps(configurations)
+            response = json.dumps(config)
         except Exception as e:
-            response = json.dumps(configurations, 'utf8')
+            response = json.dumps(config, 'utf8')
 
         return response
 
     return app
 
-#state=Ob9Wa5e1hgUhUWx40RUFbcBIZnRq2X
-#code=4/jwBSFc2Rr9ki8kj_MOk7Ek54SUwX_-DXXGdSDO84nbLe9pLkcsU3bR75JmD7VBAm9S5uCToR3EvlFnEp37X1kNU
-#scope=email%20profile%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email
 

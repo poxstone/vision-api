@@ -1,6 +1,11 @@
 import os, io
 import logging
 
+from urllib import urlencode
+from urllib2 import Request, urlopen
+import oauth2client.client
+import json
+
 from google.cloud import vision
 
 
@@ -69,3 +74,34 @@ class VisionHelper:
             arr_color = ["error on load getImageProperties"]
 
         return arr_color
+
+class Oauth2Helper:
+    @staticmethod
+    def refresh_access_token(client_id, client_secret, refresh_token):
+        # You can also read these values from the json file
+        request = Request('https://accounts.google.com/o/oauth2/token',
+                          data=urlencode({
+                              'grant_type': 'refresh_token',
+                              'client_id': client_id,
+                              'client_secret': client_secret,
+                              'refresh_token': refresh_token
+                          }),
+                          headers={
+                              'Content-Type': 'application/x-www-form-urlencoded',
+                              'Accept': 'application/json'
+                          }
+                          )
+        response = json.load(urlopen(request))
+        return response['access_token']
+
+
+
+    @staticmethod
+    def get_credentials(access_token):
+        user_agent = "Google Drive API for Python"
+        revoke_uri = "https://accounts.google.com/o/oauth2/revoke"
+        credentials = oauth2client.client.AccessTokenCredentials(
+            access_token=access_token,
+            user_agent=user_agent,
+            revoke_uri=revoke_uri)
+        return credentials
