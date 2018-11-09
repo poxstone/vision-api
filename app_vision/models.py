@@ -1,3 +1,4 @@
+import logging
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -5,14 +6,18 @@ from firebase_admin import firestore
 
 class FirestoreHelper:
     def __init__(self, project_id):
-        cred = credentials.ApplicationDefault()
         # cred = credentials.Certificate('path/to/serviceAccount.json')
-
-        firebase_admin.initialize_app(cred, {
-            'projectId': project_id,
-        })
-
-        self.db = firestore.client()
+        global firebase_db
+        
+        try:
+            print(firebase_db)
+            self.db = firebase_db
+        except Exception as e:
+            cred = credentials.ApplicationDefault()
+            firebase_admin.initialize_app(cred, {
+                'projectId': project_id })
+            self.db = firestore.client()
+            firebase_db = self.db
 
 
     def addData(self, collection, document, data_dic):
@@ -22,8 +27,12 @@ class FirestoreHelper:
         return response
 
     def getData(self, collection):
-        users_ref = self.db.collection(collection)
-        docs = users_ref.get()
+        collection_ref = self.db.collection(collection)
+        docs = collection_ref.get()
 
-        return docs
+        items = {}
+        for item in docs:
+            items[str(item.id)] = item.to_dict()
+
+        return items
 
