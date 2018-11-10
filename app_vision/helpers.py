@@ -1,8 +1,10 @@
 import os, io
 import logging
 
-from urllib import urlencode
-from urllib2 import Request, urlopen
+
+from urllib.parse import urlencode
+from urllib import request
+from urllib.request import urlopen
 import oauth2client.client
 import json
 
@@ -79,7 +81,7 @@ class Oauth2Helper:
     @staticmethod
     def refresh_access_token(client_id, client_secret, refresh_token):
         # You can also read these values from the json file
-        request = Request('https://accounts.google.com/o/oauth2/token',
+        request_token = request('https://accounts.google.com/o/oauth2/token',
                           data=urlencode({
                               'grant_type': 'refresh_token',
                               'client_id': client_id,
@@ -89,9 +91,8 @@ class Oauth2Helper:
                           headers={
                               'Content-Type': 'application/x-www-form-urlencoded',
                               'Accept': 'application/json'
-                          }
-                          )
-        response = json.load(urlopen(request))
+                          })
+        response = json.load(urlopen(request_token))
         return response['access_token']
 
 

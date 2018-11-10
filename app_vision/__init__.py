@@ -2,6 +2,7 @@ import sys
 import logging
 import json
 
+import flask
 from flask import Flask, request, redirect
 from flask.templating import render_template
 import google_auth_oauthlib.flow
@@ -86,65 +87,70 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             sys.path[0] + '/' + CLIENT_SECRET_JSON,
-            scopes=SCOPES,
-            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+            scopes=SCOPES, redirect_uri='urn:ietf:wg:oauth:2.0:oob')
 
-        protocol = 'https' if request.url.startswith('https://') else 'http'
-
-        flow.redirect_uri =  '{}://{}/oauth2callback'.format(protocol,
-                                                                request.host)
+        flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
 
         authorization_url, state = flow.authorization_url(
             access_type='offline',
-            prompt='select_account',
             include_granted_scopes='true')
 
-        return redirect(authorization_url)
+        flask.session['state'] = state
+        print('asdsadas' + state)
+        return flask.redirect(authorization_url)
+
 
     @app.route('/oauth2callback', methods=['GET', 'POST'])
     def oauth2callback():
+        state = flask.session['state']
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+                      sys.path[0] + '/' + CLIENT_SECRET_JSON,
+                      scopes=SCOPES, state=state)
+        flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+
+        authorization_response = flask.request.url
+        flow.fetch_token(authorization_response=authorization_response)
+        credentials = flow.credentials
+        flask.session['credentials'] = credentials_to_dict(credentials)
+
         fire_db = FirestoreHelper(PROJECT_ID)
-        return_db = fire_db.addData(u'config', 'oauth2', {
-                   'state': request.args['state'],
-                   'code': request.args['code'],
-                   'scope': request.args['scope']
-                  })
+        return_db = fire_db.addData(u'config', 'oauth2',
+                flask.session['credentials'])
         logging.info('imstall_params[%s]', return_db)
         return "installed: " + str(return_db)
 
+
     @app.route('/sheet/')
     def getSheet():
-        fire_db = FirestoreHelper(PROJECT_ID)
-        config = fire_db.getData(u'config')['oauth2']
+        if 'credentials' not in flask.session:
+            fire_db = FirestoreHelper(PROJECT_ID)
+            oauth2_dict = fire_db.getData(u'config')['oauth2']
+            credentials = google.oauth2.credentials.Credentials(
+                          **oauth2_dict)
+        else:
+            credentials = google.oauth2.credentials.Credentials(
+                          **flask.session['credentials'])
 
-        # TODO: create refresh token
-
-        #auth
-        refresh=config['refresh']
-        access_token = Oauth2Helper.refresh_access_token(CLIENT_ID,
-                                               CLIENT_SECRET, refresh)
-
-        credential = Oauth2Helper.get_credentials(access_token)
-        #http = credential.authorize(httplib2.Http())
-        #credential.refresh(http)
-
-        print('credential: ' + str(credential))
-
-        service = discovery.build('drive', 'v3', credentials=credential)
+        service = discovery.build('drive', 'v3', credentials=credentials)
         google_request = service.files().list()
         result = google_request.execute()
-
-
         print(result)
 
         # Response
         try:
-            response = json.dumps(config)
+            response = json.dumps(result)
         except Exception as e:
-            response = json.dumps(config, 'utf8')
+            response = json.dumps(result, 'utf8')
 
         return response
 
     return app
 
+def credentials_to_dict(credentials):
+    return {'token': credentials.token,
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': credentials.scopes}
 
