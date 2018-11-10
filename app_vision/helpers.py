@@ -1,14 +1,12 @@
 import os, io
 import logging
 
-
-from urllib.parse import urlencode
-from urllib import request
-from urllib.request import urlopen
-import oauth2client.client
-import json
-
+import flask
+import firebase_admin
+from firebase_admin import credentials, firestore
 from google.cloud import vision
+import google_auth_oauthlib.flow
+import google.oauth2.credentials
 
 
 class VisionHelper:
@@ -77,32 +75,66 @@ class VisionHelper:
 
         return arr_color
 
+
+class FirestoreHelper:
+    def __init__(self, project_id):
+        # cred = credentials.Certificate('path/to/serviceAccount.json')
+        global firebase_db
+
+        try:
+            print(firebase_db)
+            self.db = firebase_db
+        except Exception as e:
+            cred = credentials.ApplicationDefault()
+            firebase_admin.initialize_app(cred, {
+                'projectId': project_id})
+            self.db = firestore.client()
+            firebase_db = self.db
+
+    def addData(self, collection, document, data_dic):
+        doc_ref = self.db.collection(collection).document(document)
+        response = doc_ref.set(data_dic)
+
+        return response
+
+    def getData(self, collection):
+        collection_ref = self.db.collection(collection)
+        docs = collection_ref.get()
+
+        items = {}
+        for item in docs:
+            items[str(item.id)] = item.to_dict()
+
+        return items
+
+
 class Oauth2Helper:
-    @staticmethod
-    def refresh_access_token(client_id, client_secret, refresh_token):
-        # You can also read these values from the json file
-        request_token = request('https://accounts.google.com/o/oauth2/token',
-                          data=urlencode({
-                              'grant_type': 'refresh_token',
-                              'client_id': client_id,
-                              'client_secret': client_secret,
-                              'refresh_token': refresh_token
-                          }),
-                          headers={
-                              'Content-Type': 'application/x-www-form-urlencoded',
-                              'Accept': 'application/json'
-                          })
-        response = json.load(urlopen(request_token))
-        return response['access_token']
+    """
+    https://developers.google.com/identity/protocols/OAuth2WebServer
+    https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example_with_refresh.html
+    """
 
+    callback_page = 'oauth2callback'
 
+    def getAuthUrl(self, client_secret_file, scopes):
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            client_secret_file, scopes=scopes,
+            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
 
-    @staticmethod
-    def get_credentials(access_token):
-        user_agent = "Google Drive API for Python"
-        revoke_uri = "https://accounts.google.com/o/oauth2/revoke"
-        credentials = oauth2client.client.AccessTokenCredentials(
-            access_token=access_token,
-            user_agent=user_agent,
-            revoke_uri=revoke_uri)
-        return credentials
+        flow.redirect_uri = flask.url_for(callback_page, _external=True)
+
+        authorization_url, state = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true')
+
+        return authorization_url, state
+
+    def createCredentials(self, client_secret_file, scopes, state):
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            client_secret_file, scopes=scopes, state=state)
+        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
+
+        authorization_response = flask.request.url
+        flow.fetch_token(authorization_response=authorization_response)
+
+        return flow.credentials
