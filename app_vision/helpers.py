@@ -121,7 +121,7 @@ class Oauth2Helper:
             client_secret_file, scopes=scopes,
             redirect_uri='urn:ietf:wg:oauth:2.0:oob')
 
-        flow.redirect_uri = flask.url_for(callback_page, _external=True)
+        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
 
         authorization_url, state = flow.authorization_url(
             access_type='offline',
