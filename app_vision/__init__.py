@@ -134,7 +134,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         service = discovery.build('drive', 'v3', credentials=credentials)
         google_request = service.files().list()
         result = google_request.execute()
-        print(result)
 
         # Response
         try:
