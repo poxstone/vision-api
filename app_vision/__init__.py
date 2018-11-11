@@ -1,5 +1,4 @@
-import sys
-import logging
+import requests
 
 import flask
 from flask import Flask
@@ -8,7 +7,7 @@ import google.oauth2.credentials
 
 from apiclient import discovery
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper
-from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_JSON, SCOPES, \
+from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_FILE, SCOPES, \
     SPREAD_SHEET
 from .models import Configs
 
@@ -56,10 +55,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/authorize', methods=['GET', 'POST'])
     def installation():
-        client_secret_file = sys.path[0] + '/' + CLIENT_SECRET_JSON
-
         oauth2Helper = Oauth2Helper()
-        authorization_url, state = oauth2Helper.getAuthUrl(client_secret_file,
+        authorization_url, state = oauth2Helper.getAuthUrl(CLIENT_SECRET_FILE,
                                                         SCOPES)
         flask.session['state'] = state
         Logs.info('info_authorize_authorization_url', authorization_url)
@@ -70,16 +67,40 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     def oauth2callback():
         configs = Configs()
         state = flask.session['state']
-        client_secret_file = sys.path[0] + '/' + CLIENT_SECRET_JSON
 
         oauth2Helper = Oauth2Helper()
-        credentials = oauth2Helper.createCredentials(client_secret_file, SCOPES,
+        credentials = oauth2Helper.createCredentials(CLIENT_SECRET_FILE, SCOPES,
                                                      state)
         configs.saveCredentials(credentials, state)
 
         Logs.info('info_oauth2callback_credentials_', credentials)
         Logs.info('info_oauth2callback_refresh_token_', credentials.refresh_token)
+
         return 'Authorized App Success!'
+
+    @app.route('/revoke')
+    def revoke():
+        configs = Configs()
+        oauth2_dict = configs.getCredentials()
+
+        if oauth2_dict == {}:
+            return 'Not credentials found! try manual:' + \
+            'https://myaccount.google.com/u/0/permissions?pageId=none&pli=1'
+
+        credentials = google.oauth2.credentials.Credentials(
+            **oauth2_dict)
+
+
+        revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
+               params={'token': credentials.token},
+               headers={'content-type': 'application/x-www-form-urlencoded'})
+
+        configs.removeCredential()
+
+        status_code = getattr(revoke, 'status_code')
+        Logs.info('info_revoke_status_code', status_code)
+        return 'Revoked: ' + str(status_code)
+
 
     @app.route('/sheet')
     def getSheet():

@@ -7,20 +7,25 @@ from .utils import  Logs
 
 class Configs:
 
-    kind_config = u'config'
-    entity_oauth = u'oauth2'
+    collection = u'config'
+    document_oauth = u'oauth2'
 
     def __init__(self, project_id=PROJECT_ID):
         self.db = FirestoreHelper(project_id)
 
     def saveCredentials(self, credential_dic, state):
         doc_credential = self.credentials_to_dict(credential_dic, state)
-        result = self.db.addData(self.kind_config, self.entity_oauth,
+        result = self.db.addData(self.collection, self.document_oauth,
                                  doc_credential)
         return result
 
     def getCredentials(self):
-        result = self.db.getData(self.kind_config)[self.entity_oauth]
+        result = self.db.getData(self.collection)
+        if self.document_oauth not in result:
+            Logs.warning('warn_getCredentials_not_result_', result)
+            return result
+
+        result = result[self.document_oauth]
         try:
             del result['expiry']
             del result['expired']
@@ -29,6 +34,10 @@ class Configs:
             Logs.error('error_getCredentials_del_result_', e)
 
         Logs.info('info_getCredentials_result_', result)
+        return result
+
+    def removeCredential(self):
+        result = self.db.deleteDoc(self.collection, self.document_oauth)
         return result
 
     @staticmethod

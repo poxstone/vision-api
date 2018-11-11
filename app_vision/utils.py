@@ -32,9 +32,17 @@ class Logs:
             Logs.printMessages(message, logs)
 
     @staticmethod
-    def error(message, **logs):
+    def error(message, logs):
         if not Logs.isLocal():
             logging.error(message)
             logging.error(logs)
+        else:
+            Logs.printMessages(message, logs)
+
+    @staticmethod
+    def warning(message, logs):
+        if not Logs.isLocal():
+            logging.warning(message)
+            logging.warning(logs)
         else:
             Logs.printMessages(message, logs)

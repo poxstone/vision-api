@@ -140,6 +140,11 @@ class FirestoreHelper:
 
         return items
 
+    def deleteDoc(self, collection, doc):
+        delete_ref = self.db.collection(collection).document(doc).delete()
+
+        return delete_ref
+
 
 class SpreadHelper:
     def __init__(self, credentials):
