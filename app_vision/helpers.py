@@ -118,15 +118,12 @@ class Oauth2Helper:
 
     def getAuthUrl(self, client_secret_file, scopes):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-            client_secret_file, scopes=scopes,
-            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+            client_secret_file, scopes=scopes)
 
         flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
 
-        authorization_url, state = flow.authorization_url(
-            access_type='offline',
-            include_granted_scopes='true')
-
+        authorization_url, state = flow.authorization_url(access_type='offline',
+                                                include_granted_scopes='true')
         return authorization_url, state
 
     def getAccessTokenn(self, credential):
@@ -140,4 +137,7 @@ class Oauth2Helper:
         authorization_response = flask.request.url
         flow.fetch_token(authorization_response=authorization_response)
 
-        return flow.credentials
+        credentials = flow.credentials
+        print('Refresh token 1: ')
+        print(credentials.refresh_token)
+        return credentials

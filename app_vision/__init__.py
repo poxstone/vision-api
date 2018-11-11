@@ -18,7 +18,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/')
     def root():
-        print (globals())
         return render_template('index.html')
 
     @app.route('/get-image/<image_name>')
@@ -54,7 +53,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/authorize', methods=['GET', 'POST'])
     def installation():
-
         client_secret_file = sys.path[0] + '/' + CLIENT_SECRET_JSON
 
         oauth2Helper = Oauth2Helper()
@@ -64,7 +62,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
         return flask.redirect(authorization_url)
 
-    @app.route('/oauth2callback', methods=['GET', 'POST'])
+    @app.route('/oauth2callback')
     def oauth2callback():
         configs = Configs()
         state = flask.session['state']
@@ -73,7 +71,10 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         oauth2Helper = Oauth2Helper()
         credentials = oauth2Helper.createCredentials(client_secret_file, SCOPES,
                                                      state)
-        print(configs.saveCredentials(credentials, state))
+        print('Refresh token 2: ')
+        print(credentials.refresh_token)
+
+        configs.saveCredentials(credentials, state)
 
         return 'Authorized App Success!'
 
