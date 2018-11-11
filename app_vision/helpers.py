@@ -129,6 +129,9 @@ class Oauth2Helper:
 
         return authorization_url, state
 
+    def getAccessTokenn(self, credential):
+        return credential
+
     def createCredentials(self, client_secret_file, scopes, state):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             client_secret_file, scopes=scopes, state=state)

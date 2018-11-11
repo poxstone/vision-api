@@ -4,7 +4,6 @@ import logging
 import flask
 from flask import Flask
 from flask.templating import render_template
-import google_auth_oauthlib.flow
 import google.oauth2.credentials
 
 from apiclient import discovery
@@ -38,21 +37,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
         return flask.jsonify(response_json)
 
-    @app.route('/add/<user>', methods=['GET', 'POST'])
-    def add(user):
-
-
-        fire_db = FirestoreHelper(PROJECT_ID)
-        result_a = fire_db.addData(u'users', user, {
-            u'first': u'Alan',
-            u'middle': u'Mathison',
-            u'last': u'Turing',
-            u'born': 1912
-        })
-
-        docs = fire_db.getData(u'users')
-        return str(docs)
-
     @app.route('/populate/')
     def populate():
         from .to_populate import ITEMS
@@ -68,7 +52,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         docs = fire_db.getData(u'nutrition')
         return str(docs)
 
-    @app.route('/installation', methods=['GET', 'POST'])
+    @app.route('/authorize', methods=['GET', 'POST'])
     def installation():
 
         client_secret_file = sys.path[0] + '/' + CLIENT_SECRET_JSON
@@ -89,7 +73,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         oauth2Helper = Oauth2Helper()
         credentials = oauth2Helper.createCredentials(client_secret_file, SCOPES,
                                                      state)
-        configs.saveCredentials(credentials)
+        print(configs.saveCredentials(credentials))
 
         return 'Authorized App Success!'
 
