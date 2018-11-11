@@ -12,6 +12,8 @@ from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_JSON, SCOPES, \
     SPREAD_SHEET
 from .models import Configs
 
+from .utils import Logs
+
 
 # Run flask
 def create_app(config, debug=False, testing=False, config_overrides=None):
@@ -60,6 +62,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         authorization_url, state = oauth2Helper.getAuthUrl(client_secret_file,
                                                         SCOPES)
         flask.session['state'] = state
+        Logs.info('info_authorize_authorization_url', authorization_url)
 
         return flask.redirect(authorization_url)
 
@@ -72,16 +75,15 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         oauth2Helper = Oauth2Helper()
         credentials = oauth2Helper.createCredentials(client_secret_file, SCOPES,
                                                      state)
-        print('Refresh token 2: ')
-        print(credentials.refresh_token)
-
         configs.saveCredentials(credentials, state)
 
+        Logs.info('info_oauth2callback_credentials_', credentials)
+        Logs.info('info_oauth2callback_refresh_token_', credentials.refresh_token)
         return 'Authorized App Success!'
 
     @app.route('/sheet')
     def getSheet():
-        if 'credentials' not in flask.session:
+        if not ('credentials' in flask.session):
             configs = Configs()
             oauth2_dict = configs.getCredentials()
 
@@ -91,10 +93,12 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             credentials = google.oauth2.credentials.Credentials(
                           **flask.session['credentials'])
 
+        Logs.info('info_getSheet_credentials_', credentials)
         service = discovery.build('sheets', 'v4', credentials=credentials)
         google_request = service.spreadsheets().get(spreadsheetId=SPREAD_SHEET)
         result = google_request.execute()
 
+        Logs.info('info_getSheet_result_', [result])
         return flask.jsonify(result)
 
     return app

@@ -15,17 +15,21 @@ import googleapiclient.discovery
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
 CLIENT_SECRETS_JSON = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+SHEET_ID = os.environ["SHEET_ID"]
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
-SCOPES = ['https://www.googleapis.com/auth/drive',
+SCOPES = ['https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/drive.metadata.readonly',
+          'https://www.googleapis.com/auth/drive.readonly',
+          'https://www.googleapis.com/auth/drive',
           'https://www.googleapis.com/auth/spreadsheets',
           'https://www.googleapis.com/auth/drive.file',
-          'https://www.googleapis.com/auth/userinfo.email',
-          'https://www.googleapis.com/auth/userinfo.profile',
-          'https://www.googleapis.com/auth/drive.metadata.readonly']
-API_SERVICE_NAME = 'drive'
-API_VERSION = 'v2'
+          'https://www.googleapis.com/auth/spreadsheets.readonly']
+
+API_SERVICE_NAME = 'sheets'
+API_VERSION = 'v4'
 
 app = flask.Flask(__name__)
 # Note: A secret key is included in the sample so that it works.
@@ -48,17 +52,18 @@ def test_api_request():
   credentials = google.oauth2.credentials.Credentials(
       **flask.session['credentials'])
 
-  drive = googleapiclient.discovery.build(
+  sheets = googleapiclient.discovery.build(
       API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
-  files = drive.files().list().execute()
+  info = sheets.spreadsheets().get(
+            spreadsheetId=SHEET_ID).execute()
 
   # Save credentials back to session in case access token was refreshed.
   # ACTION ITEM: In a production app, you likely want to save these
   #              credentials in a persistent database instead.
   flask.session['credentials'] = credentials_to_dict(credentials)
 
-  return flask.jsonify(**files)
+  return flask.jsonify(**info)
 
 
 @app.route('/authorize')

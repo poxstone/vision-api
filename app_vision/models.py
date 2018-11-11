@@ -2,6 +2,7 @@ import logging
 
 from .helpers import FirestoreHelper
 from .constants import PROJECT_ID
+from .utils import  Logs
 
 
 class Configs:
@@ -20,6 +21,14 @@ class Configs:
 
     def getCredentials(self):
         result = self.db.getData(self.kind_config)[self.entity_oauth]
+        try:
+            del result['expiry']
+            del result['expired']
+            del result['state']
+        except Exception as e:
+            Logs.error('error_getCredentials_del_result_', e)
+
+        Logs.info('info_getCredentials_result_', result)
         return result
 
     @staticmethod

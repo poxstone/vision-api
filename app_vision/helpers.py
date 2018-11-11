@@ -39,8 +39,6 @@ class Oauth2Helper:
         flow.fetch_token(authorization_response=authorization_response)
 
         credentials = flow.credentials
-        print('Refresh token 1: ')
-        print(credentials.refresh_token)
         return credentials
 
 
