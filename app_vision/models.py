@@ -12,8 +12,8 @@ class Configs:
     def __init__(self, project_id=PROJECT_ID):
         self.db = FirestoreHelper(project_id)
 
-    def saveCredentials(self, credential_dic):
-        doc_credential = self.credentials_to_dict(credential_dic)
+    def saveCredentials(self, credential_dic, state):
+        doc_credential = self.credentials_to_dict(credential_dic, state)
         result = self.db.addData(self.kind_config, self.entity_oauth,
                                  doc_credential)
         return result
@@ -23,11 +23,17 @@ class Configs:
         return result
 
     @staticmethod
-    def credentials_to_dict(credentials):
+    def credentials_to_dict(credentials, state):
+        print(state)
+
         dic = {'token': credentials.token,
-                'refresh_token': credentials.refresh_token,
-                'token_uri': credentials.token_uri,
-                'client_id': credentials.client_id,
-                'client_secret': credentials.client_secret,
-                'scopes': credentials.scopes}
+               'id_token': credentials.id_token,
+               'state': state,
+               'expiry': credentials.expiry,
+               'expired': credentials.expired,
+               'refresh_token': credentials.refresh_token,
+               'token_uri': credentials.token_uri,
+               'client_id': credentials.client_id,
+               'client_secret': credentials.client_secret,
+               'scopes': credentials.scopes}
         return dic

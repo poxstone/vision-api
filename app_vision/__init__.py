@@ -73,7 +73,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         oauth2Helper = Oauth2Helper()
         credentials = oauth2Helper.createCredentials(client_secret_file, SCOPES,
                                                      state)
-        print(configs.saveCredentials(credentials))
+        print(configs.saveCredentials(credentials, state))
 
         return 'Authorized App Success!'
 
