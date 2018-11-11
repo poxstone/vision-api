@@ -96,16 +96,12 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     @app.route('/sheet')
     def getSheet():
         if 'credentials' not in flask.session:
-            fire_db = FirestoreHelper(PROJECT_ID)
-            oauth2_dict = fire_db.getData(u'config')['oauth2']
-            print("hola")
-            print(oauth2_dict)
+            configs = Configs()
+            oauth2_dict = configs.getCredentials()
 
             credentials = google.oauth2.credentials.Credentials(
                           **oauth2_dict)
         else:
-            print("hola")
-            print(flask.session['credentials'])
             credentials = google.oauth2.credentials.Credentials(
                           **flask.session['credentials'])
 

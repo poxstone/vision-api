@@ -15,6 +15,10 @@ class Configs:
                         self.credentials_to_dict(credential_dic))
         return result
 
+    def getCredentials(self):
+        result = self.db.getData(self.kind_config)[self.entity_oauth]
+        return result
+
     @staticmethod
     def credentials_to_dict(credentials):
         return {'token': credentials.token,
