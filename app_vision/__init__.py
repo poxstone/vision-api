@@ -8,7 +8,8 @@ import google.oauth2.credentials
 
 from apiclient import discovery
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper
-from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_JSON, SCOPES
+from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_JSON, SCOPES, \
+    SPREAD_SHEET
 from .models import Configs
 
 
@@ -90,8 +91,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             credentials = google.oauth2.credentials.Credentials(
                           **flask.session['credentials'])
 
-        service = discovery.build('drive', 'v3', credentials=credentials)
-        google_request = service.files().list()
+        service = discovery.build('sheets', 'v4', credentials=credentials)
+        google_request = service.spreadsheets().get(spreadsheetId=SPREAD_SHEET)
         result = google_request.execute()
 
         return flask.jsonify(result)

@@ -2,11 +2,46 @@ import os, io
 import logging
 
 import flask
+import google_auth_oauthlib.flow
 import firebase_admin
 from firebase_admin import credentials, firestore
 from google.cloud import vision
-import google_auth_oauthlib.flow
-import google.oauth2.credentials
+from apiclient import discovery
+
+
+class Oauth2Helper:
+    """
+    https://developers.google.com/identity/protocols/OAuth2WebServer
+    https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example_with_refresh.html
+    """
+
+    callback_page = 'oauth2callback'
+
+    def getAuthUrl(self, client_secret_file, scopes):
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            client_secret_file, scopes=scopes)
+
+        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
+
+        authorization_url, state = flow.authorization_url(access_type='offline',
+                                                include_granted_scopes='true')
+        return authorization_url, state
+
+    def getAccessTokenn(self, credential):
+        return credential
+
+    def createCredentials(self, client_secret_file, scopes, state):
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            client_secret_file, scopes=scopes, state=state)
+        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
+
+        authorization_response = flask.request.url
+        flow.fetch_token(authorization_response=authorization_response)
+
+        credentials = flow.credentials
+        print('Refresh token 1: ')
+        print(credentials.refresh_token)
+        return credentials
 
 
 class VisionHelper:
@@ -108,36 +143,12 @@ class FirestoreHelper:
         return items
 
 
-class Oauth2Helper:
-    """
-    https://developers.google.com/identity/protocols/OAuth2WebServer
-    https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example_with_refresh.html
-    """
+class SpreadHelper:
+    def __init__(self, credentials):
+        self.service = discovery.build('sheets', 'v4', credentials=credentials)
 
-    callback_page = 'oauth2callback'
+    def getSheetInfo(self, sheet_id):
+        result = self.service.spreadsheets().get(
+            spreadsheetId=sheet_id).execute()
 
-    def getAuthUrl(self, client_secret_file, scopes):
-        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-            client_secret_file, scopes=scopes)
-
-        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
-
-        authorization_url, state = flow.authorization_url(access_type='offline',
-                                                include_granted_scopes='true')
-        return authorization_url, state
-
-    def getAccessTokenn(self, credential):
-        return credential
-
-    def createCredentials(self, client_secret_file, scopes, state):
-        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-            client_secret_file, scopes=scopes, state=state)
-        flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
-
-        authorization_response = flask.request.url
-        flow.fetch_token(authorization_response=authorization_response)
-
-        credentials = flow.credentials
-        print('Refresh token 1: ')
-        print(credentials.refresh_token)
-        return credentials
+        return result
