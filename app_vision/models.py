@@ -5,7 +5,7 @@ from .constants import PROJECT_ID
 class Configs:
 
     kind_config = u'config'
-    entity_oauth = u'oautth2'
+    entity_oauth = u'oauth2'
 
     def __init__(self, project_id=PROJECT_ID):
         self.db = FirestoreHelper(project_id)
