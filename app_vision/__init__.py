@@ -1,5 +1,3 @@
-import requests
-
 import flask
 from flask import Flask
 from flask.templating import render_template
@@ -59,14 +57,15 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         authorization_url, state = oauth2Helper.getAuthUrl(CLIENT_SECRET_FILE,
                                                         SCOPES)
         flask.session['state'] = state
-        Logs.info('info_authorize_authorization_url', authorization_url)
 
+        Logs.info('info_authorize_authorization_url', authorization_url)
         return flask.redirect(authorization_url)
 
     @app.route('/oauth2callback')
     def oauth2callback():
         configs = Configs()
         state = flask.session['state']
+        del flask.session['state']
 
         oauth2Helper = Oauth2Helper()
         credentials = oauth2Helper.createCredentials(CLIENT_SECRET_FILE, SCOPES,
@@ -74,27 +73,19 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         configs.saveCredentials(credentials, state)
 
         Logs.info('info_oauth2callback_credentials_', credentials)
-        Logs.info('info_oauth2callback_refresh_token_', credentials.refresh_token)
-
         return 'Authorized App Success!'
 
     @app.route('/revoke')
     def revoke():
         configs = Configs()
-        oauth2_dict = configs.getCredentials()
+        credential = configs.getCredentials()
 
-        if oauth2_dict == {}:
-            return 'Not credentials found! try manual:' + \
+        if 'refresh_token' not in credential:
+            return 'Not credentials found! try manual: ' + \
             'https://myaccount.google.com/u/0/permissions?pageId=none&pli=1'
 
-        credentials = google.oauth2.credentials.Credentials(
-            **oauth2_dict)
-
-
-        revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
-               params={'token': credentials.token},
-               headers={'content-type': 'application/x-www-form-urlencoded'})
-
+        Logs.info('info_revoke_credential_', credential)
+        revoke = Oauth2Helper.revokeCredentials(credential['refresh_token'])
         configs.removeCredential()
 
         status_code = getattr(revoke, 'status_code')
@@ -104,15 +95,16 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/sheet')
     def getSheet():
-        if not ('credentials' in flask.session):
-            configs = Configs()
-            oauth2_dict = configs.getCredentials()
+        configs = Configs()
+        oauth2_dict = configs.getCredentials()
 
-            credentials = google.oauth2.credentials.Credentials(
-                          **oauth2_dict)
-        else:
-            credentials = google.oauth2.credentials.Credentials(
-                          **flask.session['credentials'])
+        Logs.info('info_getSheet_oauth2_dict', oauth2_dict)
+
+        if 'token' not in oauth2_dict:
+            return '{"error: "Not credentials found, please authorize again"}',\
+                   401
+
+        credentials = google.oauth2.credentials.Credentials(**oauth2_dict)
 
         Logs.info('info_getSheet_credentials_', credentials)
         service = discovery.build('sheets', 'v4', credentials=credentials)

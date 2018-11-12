@@ -1,12 +1,14 @@
 import os, io
-import logging
+import requests
 
+from apiclient import discovery
 import flask
-import google_auth_oauthlib.flow
 import firebase_admin
 from firebase_admin import credentials, firestore
+import google_auth_oauthlib.flow
 from google.cloud import vision
-from apiclient import discovery
+
+from .utils import Logs
 
 
 class Oauth2Helper:
@@ -36,10 +38,29 @@ class Oauth2Helper:
         flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
 
         authorization_response = flask.request.url
+
+
+        Logs.info('info_createCredentials_auth_resp', authorization_response)
         flow.fetch_token(authorization_response=authorization_response)
 
-        credentials = flow.credentials
-        return credentials
+        oauth2_dict = flow.credentials
+
+        try:
+            oauth2_dict.refresh_token
+            Logs.info('info_createCredentials_oauth2_dict.refresh_token',
+                      oauth2_dict)
+        except Exception as e:
+            Logs.warning('warn_createCredentials_not_found_oauth2_dict', e)
+            return oauth2_dict
+
+        return oauth2_dict
+
+    @staticmethod
+    def revokeCredentials(credential_token):
+        revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
+               params={'token': credential_token},
+               headers={'content-type': 'application/x-www-form-urlencoded'})
+        return revoke
 
 
 class VisionHelper:
@@ -79,7 +100,7 @@ class VisionHelper:
                     'topicality': label.topicality
                 })
         except Exception as e:
-            logging.error('error_getLocalLabels_[%s]', e)
+            Logs.error('error_getLocalLabels_', e)
             label_response = ["error on load getLocalLabels"]
 
         return label_response
@@ -99,11 +120,11 @@ class VisionHelper:
                     'rgb': 'rgb({},{},{})'.format(color.color.red,
                                                        color.color.green,
                                                        color.color.blue)}
-                logging.info(properties_color)
+                Logs.info('info_getImageProperties', properties_color)
                 arr_color.append(properties_color)
 
         except Exception as e:
-            logging.error('error_getImageProperties_[%s]', e)
+            Logs.error('error_getImageProperties_', e)
             arr_color = ["error on load getImageProperties"]
 
         return arr_color

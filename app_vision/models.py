@@ -1,5 +1,3 @@
-import logging
-
 from .helpers import FirestoreHelper
 from .constants import PROJECT_ID
 from .utils import  Logs

@@ -1,5 +1,4 @@
 import logging
-import flask
 from flask import request
 
 class Logs:
@@ -17,11 +16,13 @@ class Logs:
         try:
             print(message)
             print(str(logs))
+            print(type(logs))
             print(dir(logs))
             print(dict(logs))
         except Exception as e:
             print(str(e))
         print('<<---')
+        print('')
 
     @staticmethod
     def info(message, logs):
