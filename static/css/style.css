@@ -1112,7 +1112,7 @@ body {
   left: 0;
   top: 0;
   bottom: 0;
-  right: 0;
+  rigth: 0px;
   margin: 0;
   width: 100%;
   height: 100%;
@@ -1150,7 +1150,7 @@ body {
   border-radius: 20px;
 }
 .mdl-button--fab,
-.mdl-button--fab:hover {
+:hover {
   background: #808080;
 }
 .controls-cont {

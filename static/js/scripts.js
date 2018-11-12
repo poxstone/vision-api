@@ -67,22 +67,23 @@ function handleFileSelect(evt) {
 }
 
 // camera
-var video = document.getElementById('video');
-// Get access to the camera!
-if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  // Not adding `{ audio: true }` since we only want video now
-  navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-
-    try {
-      video.srcObject = stream;
-    } catch (error) {
-      video.src = window.URL.createObjectURL(stream);
+function cameraStart() {
+    var video = document.getElementById('video');
+    // Get access to the camera!
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Not adding `{ audio: true }` since we only want video now
+      navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+    
+        try {
+          video.srcObject = stream;
+        } catch (error) {
+          video.src = window.URL.createObjectURL(stream);
+        }
+    
+        video.play();
+      });
     }
-
-    video.play();
-  });
 }
-
 
 function takePicture() {
     var canvas = document.getElementById('canvas');

@@ -1,6 +1,5 @@
 import flask
-from flask import Flask
-from flask.templating import render_template
+from flask import Flask, redirect
 
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper, SpreadHelper
 from .constants import BUCKET, PROJECT_ID, SPREAD_SHEET
@@ -14,7 +13,7 @@ def create_app():
 
     @app.route('/')
     def root():
-        return render_template('index.html')
+        return redirect('/index.html', code=302)
 
     @app.route('/get-image/<image_name>')
     def getImage(image_name):

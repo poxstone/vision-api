@@ -106,11 +106,11 @@ curl http://localhost:8080/get-image/tomaco_man.jpg;
     ```
 - html render from pug
     ```bash
-    pug -w -P -o ./app_vision/templates/ ./app_vision/templates/index.pug;
+    pug -w -P -o ./static/html/ ./static/html/index.pug;
     ```
 - css rednder from stylus
     ```bash
-    stylus -u nib -w ./static/css/style.styl
+    stylus -u nib -w ./static/css/style.styl;
     ```
 
 ## Deploy
