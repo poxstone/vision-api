@@ -3,28 +3,33 @@
 class ImageHelper {
     constructor() {}
     
-    static prepareImage(inputEvent) {
-        var files = inputEvent.target.files;
+    static imageToBuffer(fileToLoad) {
         
         return new Promise((resolve, reject) => {
-            for (let i = 0, fileToLoad; fileToLoad = files[i]; i++) {
-                console.log('File_to_read', fileToLoad);
+            var reader = new FileReader();
+            reader.onload = ((fileToLoad) => (event) => {
+                console.log('File_reader_target_bloop: ', event.target.result, 'File_reader_fileToLoad: ', fileToLoad);
+                // Send to firebase upload
+                var bufferFile = event.target.result;
 
-                var reader = new FileReader();
-                reader.onload = ((fileLoaded) => (event) => {
-                    console.log('File_reader_target_bloop: ', event.target.result, 'File_reader_fileLoaded: ', fileLoaded);
-                    // Send to firebase upload
-                    var fileName = fileToLoad.name;
-                    var inputFile = event.target.result;
+                resolve(bufferFile);
 
-                    resolve(inputFile, fileName);
+            })(fileToLoad);
+            // excecute
+            reader.readAsArrayBuffer(fileToLoad);
+        });
+    }
 
-                })(fileToLoad);
-                // excecute
-                reader.readAsArrayBuffer(fileToLoad);
+    static imageToDataUrl(fileToLoad) {
+
+        return new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onload = function(fileRender) {
+                var imgDataUrl = fileRender.target.result
+                resolve(imgDataUrl);
             }
-        })
-
+            reader.readAsDataURL(fileToLoad);
+        });
     }
 }
 

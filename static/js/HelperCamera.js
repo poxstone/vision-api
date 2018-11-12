@@ -21,9 +21,9 @@ class CameraHelper {
     }
 
     takePicture() {
-        var canvas = document.getElementById('canvas');
+        var canvas = document.getElementById('CANVAS');
         var context = canvas.getContext('2d');
-        var video = document.getElementById('video');
+        var video = document.getElementById('VIDEO');
         context.drawImage(video, 0, 0, 640, 480);
         var jpegUrl = canvas.toDataURL("image/jpeg");
         console.log("Hola", jpegUrl);

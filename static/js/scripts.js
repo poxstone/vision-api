@@ -12,13 +12,21 @@
         
         // INPUT LOAD FUNCTION
         document.querySelector('#UPLOAD_FILE').addEventListener('change', (event) => {
-            var imageHelper = new ImageHelper();
-            var pasteSelector = '#RESULT';
-            
-            // Upload pipe
-            ImageHelper.prepareImage(event).then((inputFile, fileName) => {
+            const ELEMENT_INFO = '#IMG_INFO';
+            const IMG_PREVIEW = '#IMG_UPLOADED';
+            var fileToLoad = event.target.files[0];
+            var fileName = fileToLoad.name;
 
-                FirebaseStorage.uploadImage(inputFile, fileName).then( (snapshot) => {
+            // render image
+            ImageHelper.imageToDataUrl(fileToLoad).then((imgDataUrl) => {
+                console.log('image to render: ', fileName, imgDataUrl);
+                document.querySelector(IMG_PREVIEW).setAttribute('src', imgDataUrl);
+            });
+
+            // Upload pipe
+            ImageHelper.imageToBuffer(fileToLoad).then((bufferFile) => {
+
+                FirebaseStorage.uploadImage(bufferFile).then( (snapshot) => {
 
                     console.log('info_Uploaded_a_blob_or_file:', snapshot);
                     
@@ -30,7 +38,7 @@
                             responseStr += `<li><b>${labels[indx].label}</b>: ${labels[indx].score}% </li>`;
                         }
 
-                        document.querySelector(pasteSelector).innerHTML = `<ul>${responseStr}</ul>`;
+                        document.querySelector(ELEMENT_INFO).innerHTML = `<ul>${responseStr}</ul>`;
                         
                         EndpointsImage.getImageSheet().then((response) => {
                             console.log(response);
