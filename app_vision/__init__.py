@@ -84,7 +84,7 @@ def create_app():
         Logs.info('info_revoke_status_code', status_code)
         return 'Revoked: ' + str(status_code)
 
-    @app.route('/sheet')
+    @app.route('/sheet/')
     def getSheet():
         oauth2Helper = Oauth2Helper()
         credential = oauth2Helper.genereWebCredential()

@@ -14,6 +14,7 @@
         document.querySelector('#UPLOAD_FILE').addEventListener('change', (event) => {
             var imageHelper = new ImageHelper();
             var pasteSelector = '#RESULT';
+            
             // Upload pipe
             ImageHelper.prepareImage(event).then((inputFile, fileName) => {
 
@@ -30,6 +31,10 @@
                         }
 
                         document.querySelector(pasteSelector).innerHTML = `<ul>${responseStr}</ul>`;
+                        
+                        EndpointsImage.getImageSheet().then((response) => {
+                            console.log(response);
+                        })
                     });
                 });
             });
