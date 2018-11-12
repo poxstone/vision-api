@@ -1,18 +1,15 @@
 import flask
 from flask import Flask
 from flask.templating import render_template
-import google.oauth2.credentials
 
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper, SpreadHelper
-from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_FILE, SCOPES, \
-    SPREAD_SHEET
-from .models import Auth
+from .constants import BUCKET, PROJECT_ID, SPREAD_SHEET
 
 from .utils import Logs
 
 
 # Run flask
-def create_app(config, debug=False, testing=False, config_overrides=None):
+def create_app(config):
     app = Flask(__name__)
 
     @app.route('/')
@@ -72,16 +69,17 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/revoke')
     def revoke():
-        auth = Oauth2Helper()
-        credential = auth.getAuthModel()
+        oauth2Helper = Oauth2Helper()
+        credential_dict = oauth2Helper.getOAuthDict()
 
-        if 'refresh_token' not in credential:
+        if 'refresh_token' not in credential_dict:
             return 'Not credentials found! try manual: ' + \
             'https://myaccount.google.com/u/0/permissions?pageId=none&pli=1'
 
-        Logs.info('info_revoke_credential_', credential)
-        revoke = Oauth2Helper.revokeCredentials(credential['refresh_token'])
-        auth.removeCredentialDB()
+        Logs.info('info_revoke_credential_', credential_dict)
+        revoke = Oauth2Helper.revokeCredentials(credential_dict[
+                                                    'refresh_token'])
+        oauth2Helper.removeCredentialDB()
 
         status_code = getattr(revoke, 'status_code')
         Logs.info('info_revoke_status_code', status_code)
@@ -89,8 +87,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/sheet')
     def getSheet():
-        auth = Oauth2Helper()
-        credential = auth.genereWebCredential()
+        oauth2Helper = Oauth2Helper()
+        credential = oauth2Helper.genereWebCredential()
         spreadHelper = SpreadHelper(credential)
 
         try:

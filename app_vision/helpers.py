@@ -18,35 +18,29 @@ class Oauth2Helper:
     https://developers.google.com/identity/protocols/OAuth2WebServer
     https://requests-oauthlib.readthedocs.io/en/latest/examples/real_world_example_with_refresh.html
     """
-
-    callback_page = 'oauth2callback'
-
     def __init__(self):
-        from .models import Auth
+        from .models import OAuthModel
 
-        self.auth_model = Auth()
-        self.auth = self.auth_model.getCredentials()
+        self.callback_page = 'oauth2callback'
+        self.oAuth_model = OAuthModel()
+        self.oAuth_dict = self.oAuth_model.getCredentials()
 
         # If not in Data base
-        Logs.info('info_getSheet_oauth2_dict', self.auth_model)
-        if 'token' not in self.auth:
-            Logs.info('{"error: "Not credentials found, please authorize '
-                      'again"}', 401)
+        Logs.info('info_getSheet_oauth2_dict', self.oAuth_dict)
+        if 'token' not in self.oAuth_dict or \
+           'refresh_token' not in self.oAuth_dict:
+            Logs.warning('warn_Oauth2Helper_init_not_token_or_refresh_found: '
+                         'needs authorization"}', self.oAuth_dict)
 
-        if 'refresh_token' not in self.auth:
-            Logs.info('Not credentials found! try manual: ' + \
-            'https://myaccount.google.com/u/0/permissions?pageId=none&pli=1',
-                      self.auth)
-
-    def getAuthModel(self):
-        return self.auth
+    def getOAuthDict(self):
+        return self.oAuth_dict
 
     def removeCredentialDB(self):
-        result = self.auth_model.removeCredential()
+        result = self.oAuth_model.removeCredential()
         return result
 
     def saveCredentialDB(self, credential_dic, state):
-        result = self.auth_model.saveCredentials(credential_dic, state)
+        result = self.oAuth_model.saveCredentials(credential_dic, state)
         return result
 
     def genereWebCredential(self):
@@ -56,7 +50,7 @@ class Oauth2Helper:
         except Exception as e:
             Logs.info('info_callCredentialWeb_not_credential', e)
             self.credentials = google.oauth2.credentials.Credentials(
-                **self.auth)
+                **self.oAuth_dict)
             return self.credentials
 
     def getAuthUrl(self, client_secret_file=CLIENT_SECRET_FILE, scopes=SCOPES):

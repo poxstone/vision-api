@@ -3,7 +3,7 @@ from .constants import PROJECT_ID
 from .utils import  Logs
 
 
-class Auth:
+class OAuthModel:
 
     collection = u'config'
     document_oauth = u'oauth2'
