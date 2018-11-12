@@ -6,8 +6,10 @@ import flask
 import firebase_admin
 from firebase_admin import credentials, firestore
 import google_auth_oauthlib.flow
+import google.oauth2.credentials
 from google.cloud import vision
 
+from .constants import CLIENT_SECRET_FILE, SCOPES
 from .utils import Logs
 
 
@@ -19,7 +21,45 @@ class Oauth2Helper:
 
     callback_page = 'oauth2callback'
 
-    def getAuthUrl(self, client_secret_file, scopes):
+    def __init__(self):
+        from .models import Auth
+
+        self.auth_model = Auth()
+        self.auth = self.auth_model.getCredentials()
+
+        # If not in Data base
+        Logs.info('info_getSheet_oauth2_dict', self.auth_model)
+        if 'token' not in self.auth:
+            Logs.info('{"error: "Not credentials found, please authorize '
+                      'again"}', 401)
+
+        if 'refresh_token' not in self.auth:
+            Logs.info('Not credentials found! try manual: ' + \
+            'https://myaccount.google.com/u/0/permissions?pageId=none&pli=1',
+                      self.auth)
+
+    def getAuthModel(self):
+        return self.auth
+
+    def removeCredentialDB(self):
+        result = self.auth_model.removeCredential()
+        return result
+
+    def saveCredentialDB(self, credential_dic, state):
+        result = self.auth_model.saveCredentials(credential_dic, state)
+        return result
+
+    def genereWebCredential(self):
+        try:
+            if self.credentials:
+                return self.credentials
+        except Exception as e:
+            Logs.info('info_callCredentialWeb_not_credential', e)
+            self.credentials = google.oauth2.credentials.Credentials(
+                **self.auth)
+            return self.credentials
+
+    def getAuthUrl(self, client_secret_file=CLIENT_SECRET_FILE, scopes=SCOPES):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             client_secret_file, scopes=scopes)
 
@@ -29,16 +69,13 @@ class Oauth2Helper:
                                                 include_granted_scopes='true')
         return authorization_url, state
 
-    def getAccessTokenn(self, credential):
-        return credential
-
-    def createCredentials(self, client_secret_file, scopes, state):
+    def createCredentials(self, state, client_secret_file=CLIENT_SECRET_FILE,
+                          scopes=SCOPES):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             client_secret_file, scopes=scopes, state=state)
         flow.redirect_uri = flask.url_for(self.callback_page, _external=True)
 
         authorization_response = flask.request.url
-
 
         Logs.info('info_createCredentials_auth_resp', authorization_response)
         flow.fetch_token(authorization_response=authorization_response)
@@ -52,6 +89,8 @@ class Oauth2Helper:
         except Exception as e:
             Logs.warning('warn_createCredentials_not_found_oauth2_dict', e)
             return oauth2_dict
+
+        self.saveCredentialDB(oauth2_dict, state)
 
         return oauth2_dict
 
@@ -90,7 +129,8 @@ class VisionHelper:
         try:
             response = self.client.annotate_image({
                 'image': {'source': {'image_uri': bucket_img}},
-                'features': [{'type': vision.enums.Feature.Type.LABEL_DETECTION}]})
+                'features': [{'type': vision.enums.Feature.Type.
+                    LABEL_DETECTION}]})
 
             label_response = []
             for label in response.label_annotations:
@@ -109,7 +149,8 @@ class VisionHelper:
         try:
             response = self.client.annotate_image({
                 'image': {'source': {'image_uri': bucket_img}},
-                'features': [{'type': vision.enums.Feature.Type.IMAGE_PROPERTIES}]})
+                'features': [{'type': vision.enums.Feature.Type.
+                    IMAGE_PROPERTIES}]})
 
             props = response.image_properties_annotation
 

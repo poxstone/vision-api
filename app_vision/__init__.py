@@ -6,7 +6,7 @@ import google.oauth2.credentials
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper, SpreadHelper
 from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_FILE, SCOPES, \
     SPREAD_SHEET
-from .models import Configs
+from .models import Auth
 
 from .utils import Logs
 
@@ -53,8 +53,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     @app.route('/authorize', methods=['GET', 'POST'])
     def installation():
         oauth2Helper = Oauth2Helper()
-        authorization_url, state = oauth2Helper.getAuthUrl(CLIENT_SECRET_FILE,
-                                                        SCOPES)
+        authorization_url, state = oauth2Helper.getAuthUrl()
         flask.session['state'] = state
 
         Logs.info('info_authorize_authorization_url', authorization_url)
@@ -62,22 +61,19 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/oauth2callback')
     def oauth2callback():
-        configs = Configs()
         state = flask.session['state']
         del flask.session['state']
 
         oauth2Helper = Oauth2Helper()
-        credentials = oauth2Helper.createCredentials(CLIENT_SECRET_FILE, SCOPES,
-                                                     state)
-        configs.saveCredentials(credentials, state)
+        credentials = oauth2Helper.createCredentials(state=state)
 
         Logs.info('info_oauth2callback_credentials_', credentials)
         return 'Authorized App Success!'
 
     @app.route('/revoke')
     def revoke():
-        configs = Configs()
-        credential = configs.getCredentials()
+        auth = Oauth2Helper()
+        credential = auth.getAuthModel()
 
         if 'refresh_token' not in credential:
             return 'Not credentials found! try manual: ' + \
@@ -85,7 +81,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
         Logs.info('info_revoke_credential_', credential)
         revoke = Oauth2Helper.revokeCredentials(credential['refresh_token'])
-        configs.removeCredential()
+        auth.removeCredentialDB()
 
         status_code = getattr(revoke, 'status_code')
         Logs.info('info_revoke_status_code', status_code)
@@ -93,17 +89,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.route('/sheet')
     def getSheet():
-        configs = Configs()
-        oauth2_dict = configs.getCredentials()
-
-        Logs.info('info_getSheet_oauth2_dict', oauth2_dict)
-
-        if 'token' not in oauth2_dict:
-            return '{"error: "Not credentials found, please authorize again"}',\
-                   401
-
-        credential = google.oauth2.credentials.Credentials(**oauth2_dict)
-
+        auth = Oauth2Helper()
+        credential = auth.genereWebCredential()
         spreadHelper = SpreadHelper(credential)
 
         try:

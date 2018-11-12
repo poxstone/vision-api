@@ -10,7 +10,7 @@ class Logs:
             return False
 
     @staticmethod
-    def printMessages(message, logs):
+    def printMessages(message, logs=None):
         print('--->>')
         try:
             print(message)
@@ -29,18 +29,18 @@ class Logs:
             logging.info(message)
             logging.info(logs)
         else:
-            Logs.printMessages(message, logs)
+            Logs.printMessages(message, logs=None)
 
     @staticmethod
-    def error(message, logs):
+    def error(message, logs=None):
         if not Logs.isLocal():
             logging.error(message)
             logging.error(logs)
         else:
-            Logs.printMessages(message, logs)
+            Logs.printMessages(message, logs=None)
 
     @staticmethod
-    def warning(message, logs):
+    def warning(message, logs=None):
         if not Logs.isLocal():
             logging.warning(message)
             logging.warning(logs)
