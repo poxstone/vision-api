@@ -172,7 +172,15 @@ class SpreadHelper:
         self.service = discovery.build('sheets', 'v4', credentials=credentials)
 
     def getSheetInfo(self, sheet_id):
-        result = self.service.spreadsheets().get(
+        sheetInfo = self.service.spreadsheets().get(
             spreadsheetId=sheet_id).execute()
 
-        return result
+        Logs.info('info_SpreadHelper_getSheetInfo_sheetInfo', sheetInfo)
+        return sheetInfo
+
+    def getSheetValues(self, sheet_id, range):
+        values = self.service.spreadsheets().values().get(
+            spreadsheetId=sheet_id, range=range).execute()
+
+        Logs.info('info_SpreadHelper_getSheetInfo_getSheetValues', values)
+        return values

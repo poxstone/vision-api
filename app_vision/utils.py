@@ -4,7 +4,6 @@ from flask import request
 class Logs:
     @staticmethod
     def isLocal():
-        print('--dominio--' + request.host)
         if 'localhost' in request.host:
             return True
         else:

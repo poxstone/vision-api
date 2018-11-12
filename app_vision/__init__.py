@@ -3,8 +3,7 @@ from flask import Flask
 from flask.templating import render_template
 import google.oauth2.credentials
 
-from apiclient import discovery
-from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper
+from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper, SpreadHelper
 from .constants import BUCKET, PROJECT_ID, CLIENT_SECRET_FILE, SCOPES, \
     SPREAD_SHEET
 from .models import Configs
@@ -92,7 +91,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         Logs.info('info_revoke_status_code', status_code)
         return 'Revoked: ' + str(status_code)
 
-
     @app.route('/sheet')
     def getSheet():
         configs = Configs()
@@ -104,14 +102,22 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             return '{"error: "Not credentials found, please authorize again"}',\
                    401
 
-        credentials = google.oauth2.credentials.Credentials(**oauth2_dict)
+        credential = google.oauth2.credentials.Credentials(**oauth2_dict)
 
-        Logs.info('info_getSheet_credentials_', credentials)
-        service = discovery.build('sheets', 'v4', credentials=credentials)
-        google_request = service.spreadsheets().get(spreadsheetId=SPREAD_SHEET)
-        result = google_request.execute()
+        spreadHelper = SpreadHelper(credential)
 
-        Logs.info('info_getSheet_result_', [result])
-        return flask.jsonify(result)
+        try:
+            sheet_info = spreadHelper.getSheetInfo(SPREAD_SHEET)
+
+            sheet = sheet_info['sheets'][0]['properties']['title']
+            max_rows = sheet_info['sheets'][0]['properties']['gridProperties'][
+                'rowCount']
+            range_str = '{}!A2:L{}'.format(sheet, max_rows)
+            result = spreadHelper.getSheetValues(SPREAD_SHEET, range_str)
+            return flask.jsonify(result)
+        except Exception as e:
+            Logs.error('error_getSheet_sheet_info', e)
+            return '{"error: "Error calling Sheet, please validate that ' \
+                   'exists"}', 500
 
     return app
