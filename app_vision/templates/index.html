@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -9,44 +9,30 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-orange.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
-
-    <script src="https://code.getmdl.io/1.3.0/material.min.js" defer ></script>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js" defer=""></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
-
     <script src="/static/js/constants.js"></script>
-
-
-</head>
-<body>
+  </head>
+  <body>
     <header class="header-cont">
-        <h1>
-            <img src="/static/img/favicon.svg" alt="">
-            AppVision
-        </h1>
+      <h1><img src="/static/img/favicon.svg" alt="">AppVision</h1>
     </header>
     <main class="main-cont">
-        <div class="camera-cont">
-            <video id="video" autoplay></video>
-            <canvas id="canvas"></canvas>
+      <div class="camera-cont">
+        <video id="video" autoplay=""></video>
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="legend-cont" id="result"></div>
+      <div class="controls-cont">
+        <div class="sub-menu">
+          <label class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"><i class="material-icons">file_upload</i>
+            <input type="file" onchange="handleFileSelect(event)" \="">
+          </label>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" type="button" onclick="takePicture(event)"><i class="material-icons">camera</i></button>
         </div>
-
-        <div class="legend-cont" id="result"></div>
-
-        <div class="controls-cont">
-            <div class="sub-menu">
-                <label class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                    <i class="material-icons">file_upload</i>
-                    <input type="file" onchange="handleFileSelect(event)" \>
-                </label>
-                <button type="button" onclick="takePicture(event)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                    <i class="material-icons">camera</i>
-                </button>
-            </div>
-            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-              <i class="material-icons">add</i>
-            </button>
-        </div>
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"><i class="material-icons">add</i></button>
+      </div>
     </main>
     <script src="/static/js/scripts.js"></script>
-</body>
+  </body>
 </html>

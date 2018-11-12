@@ -1,0 +1,34 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    title App Vision
+    link(rel='icon', type='image/svg+xml', href='/static/img/favicon.svg', sizes='any')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
+    link(rel='stylesheet', href='https://code.getmdl.io/1.3.0/material.grey-orange.min.css')
+    link(rel='stylesheet', href='/static/css/style.css')
+    script(src='https://code.getmdl.io/1.3.0/material.min.js', defer='')
+    script(src='https://www.gstatic.com/firebasejs/5.5.7/firebase.js')
+    script(src='/static/js/constants.js')
+  body
+    header.header-cont
+      h1
+        img(src='/static/img/favicon.svg', alt='')
+        | AppVision
+    main.main-cont
+      .camera-cont
+        video#video(autoplay='')
+        canvas#canvas
+      #result.legend-cont
+      .controls-cont
+        .sub-menu
+          label.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab
+            i.material-icons file_upload
+            input(type='file', onchange='handleFileSelect(event)', \='')
+          button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab(type='button', onclick='takePicture(event)')
+            i.material-icons camera
+        button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--colored
+          i.material-icons add
+    script(src='/static/js/scripts.js')

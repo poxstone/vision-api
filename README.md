@@ -99,6 +99,20 @@ dev_appserver.py ./ --host="0.0.0.0" --enable_host_checking="false" --log_level=
 curl http://localhost:8080/get-image/tomaco_man.jpg;
 ```
 
+## Edit Frontend
+- install **nodejs 8+** and dependencies
+    ```bash
+    npm i -g stylus nib pug-cli less less-prefixer watch-less http-server bower;
+    ```
+- html render from pug
+    ```bash
+    pug -w -P -o ./app_vision/templates/ ./app_vision/templates/index.pug;
+    ```
+- css rednder from stylus
+    ```bash
+    stylus -u nib -w ./static/css/style.styl
+    ```
+
 ## Deploy
 
 ```bash
