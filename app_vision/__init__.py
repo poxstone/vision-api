@@ -9,7 +9,7 @@ from .utils import Logs
 
 
 # Run flask
-def create_app(config):
+def create_app():
     app = Flask(__name__)
 
     @app.route('/')

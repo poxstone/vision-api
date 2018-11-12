@@ -11,7 +11,7 @@
 
 ### Require:
 - **Python 2.7** for run App Engine local
-- **Python 3.7** for run code
+- **Python 3.7** like python3
 - **pip** to install python dependences
 - **Browser file API** ((doc)[https://www.html5rocks.com/es/tutorials/file/dndfiles/])
 
@@ -35,26 +35,42 @@ python3.7 -m pip install -r requirements.txt -t lib --upgrade;
     const BUCKET_DIR = 'sub_directory';
     
     ```
-- **config.py**
-    ```python
-    import os, sys
-
-    from app_vision.constants import CREDENTIAL_JSON
-
-    # For local debug
-    ROOT_PATH = sys.path[0]
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ROOT_PATH + '/' + CREDENTIAL_JSON
-
-    PROJECT_ID = '<PROJEC_ID>'
-    DATA_BACKEND = 'datastore'
-    ```
-
 - **app_vision/constants.py**
     ```python
+    import sys
+  
+    PROJECT_ID = '<PROJECT_ID>'
     BUCKET_DIR = 'sub_directory'
-    BUCKET = 'gs://<PROJEC_ID>.appspot.com/' + BUCKET_DIR
+    BUCKET = 'gs://<PROJECT_ID>.appspot.com/' + BUCKET_DIR
     CREDENTIAL_JSON = 'credential.json'
+    CLIENT_SECRET_JSON = '....apps.googleusercontent.com.json'
+    CLIENT_SECRET_FILE = sys.path[0] + '/' + CLIENT_SECRET_JSON
+    GOOGLE_APPLICATION_CREDENTIALS = sys.path[0] + '/' + CREDENTIAL_JSON
+    CLIENT_SECRET = 'qwe8G...' # from GCP Client secret
+    SPREAD_SHEET = '19qw...' # Id for spread sheet
+    SCOPES = ['https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/drive.metadata.readonly',
+          'https://www.googleapis.com/auth/drive.readonly',
+          'https://www.googleapis.com/auth/drive',
+          'https://www.googleapis.com/auth/spreadsheets',
+          'https://www.googleapis.com/auth/drive.file',
+          'https://www.googleapis.com/auth/spreadsheets.readonly']
+        
     ```
+    
+- **config.py**
+    ```python
+    import os
+    from app_vision.constants import GOOGLE_APPLICATION_CREDENTIALS
+
+    # For local debug
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    SECRET_KEY = 'super secret key'
+  
+    ```
+
 - **credential.json**
     ```json
     {
@@ -77,7 +93,7 @@ python3.7 -m pip install -r requirements.txt -t lib --upgrade;
 # Enviroment var is not working currently
 export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/credential.json";
 
-dev_appserver.py ./;
+dev_appserver.py ./ --host="0.0.0.0" --enable_host_checking="false" --log_level="debug";
 
 # test
 curl http://localhost:8080/get-image/tomaco_man.jpg;

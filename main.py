@@ -1,7 +1,7 @@
 import config
 import app_vision
 
-app = app_vision.create_app(config)
+app = app_vision.create_app()
 app.secret_key = config.SECRET_KEY
 
 # Run app
