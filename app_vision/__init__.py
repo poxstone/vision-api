@@ -96,7 +96,7 @@ def create_app():
             sheet = sheet_info['sheets'][0]['properties']['title']
             max_rows = sheet_info['sheets'][0]['properties']['gridProperties'][
                 'rowCount']
-            range_str = '{}!A2:L{}'.format(sheet, max_rows)
+            range_str = '{}!A1:L{}'.format(sheet, max_rows)
             result = spreadHelper.getSheetValues(SPREAD_SHEET, range_str)
             return flask.jsonify(result)
         except Exception as e:

@@ -13,6 +13,7 @@
         // INPUT LOAD FUNCTION
         document.querySelector('#UPLOAD_FILE').addEventListener('change', (event) => {
             const ELEMENT_INFO = '#IMG_INFO';
+            const ELEMENT_TAGS = '#IMG_TAGS';
             const IMG_PREVIEW = '#IMG_UPLOADED';
             var fileToLoad = event.target.files[0];
             var fileName = fileToLoad.name;
@@ -32,16 +33,33 @@
                     
                     EndpointsImage.getImageInfo(fileName).then((imageInfoData) => {
                         var labels = imageInfoData.labels;
-                        var responseStr = '';
 
+                        var responseStr = '';
                         for (let indx=0;indx < imageInfoData.labels.length; indx++ ) {
-                            responseStr += `<li><b>${labels[indx].label}</b>: ${labels[indx].score}% </li>`;
+                            responseStr += `<li class="item">
+                                    <b class="i-key">${labels[indx].label}</b>
+                                    <i class="i-value">${labels[indx].score}%</i>
+                                </li>`;
                         }
 
-                        document.querySelector(ELEMENT_INFO).innerHTML = `<ul>${responseStr}</ul>`;
+                        document.querySelector(ELEMENT_TAGS).innerHTML = `${responseStr}`;
                         
-                        EndpointsImage.getImageSheet().then((response) => {
-                            console.log(response);
+                        EndpointsImage.getImageSheet().then((imageNutriData) => {
+                            console.log(imageNutriData);
+                            var rows = imageNutriData.values;
+                            var titles = rows[0];
+                            var values = rows[1];
+                            
+                            var responseStr = '';
+                            for (let indx=0;indx < titles.length; indx++ ) {
+                                var title = titles[indx];
+                                var value = values[indx];
+                                responseStr += `<li class="item">
+                                        <b class="i-key">${title}</b>
+                                        <i class="i-value">${value}</i>
+                                    </li>`;
+                            }
+                            document.querySelector(ELEMENT_INFO).innerHTML = `${responseStr}`;
                         })
                     });
                 });

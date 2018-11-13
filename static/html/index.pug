@@ -34,8 +34,8 @@ html(lang='en')
               canvas#CANVAS
           .img-description
             h2#IMG-TITLE.img-title Banano
-            h3.img-subtitle Tags:
-            ul.label-collection
+            h3.img-subtitle Tags (%):
+            ul#IMG_TAGS.label-collection
               - for (var i=1; i<30;i++)
                 li.item
                   b.i-key Pera
@@ -52,7 +52,7 @@ html(lang='en')
         
         main#CONT_DATA.main-data
           #DATA_NUTRITION.data
-            ul.data-collection
+            ul#IMG_INFO.data-collection
               - for (var i=1; i<30;i++)
                 li.item
                   b.i-key Cal c/100g
