@@ -1,72 +1,193 @@
 @import 'nib'
 
+//GENERAL
+.mdi
+    font-size 24px
+    display inline-block
+
+// CONTENT
+html
+    background $bgColor
+
 html, body
-    background #222
-    color #ccc
-    padding 0
     margin 0
-    overflow hidden
+    padding 0
+    font-family $textFont
+    color $textColor
+    font-size $text_p
 
-.header-cont
-    position fixed
-    top 0
-    left 0
-    z-index 10
-    padding 10px
-    h1
-        font-size 32px
-        color rgba(255,255,255,0.33)
-        margin 0
-        padding 0
-
-.main-cont
+.wrapper
+    padding 0
+    margin auto
+    display flex
+    width $wrapper
+    box-sizing border-box
     position absolute
     left 0
     top 0
+    right 0
     bottom 0
-    rigth 0px
-    margin 0
-    width 100%
-    height 100%
-    .camera-cont
-        video
-            background rgba(80,80,80,0.75)
-            z-index 2
-        canvas
-            background rgba(84, 47, 21, 0.5)
-            z-index 1
-    .legend-cont
-        background rgba(0,0,0,0.8)
-        position absolute
-        padding 4px
-        z-index 4
-        left 15px
-        right 15px
-        top 80px
-        bottom 80px
-        overflow auto
-        border-radius 8px
-        box-shadow rgba(0,0,0,0.5) 0 0 12px 2px
-        &:empty
+    @media (max-width $screen-sm)
+        flex-direction column
+    .header-cont
+        width 320px
+        @media (max-width $screen-sm)
+            width auto
+            height 80px
+            padding $paddingBox*1.5 $paddingBox*2
+    .cont-body
+        width auto
+        flex-grow 1
+
+
+.header-cont
+    background $white1
+    padding $paddingBox*2
+    box-sizing border-box
+    /h1.logo-title
+        padding 0
+        margin 0
+        font-size $text_h3
+        font-weight normal
+        img.logo-ico
+            size 48px
+            vertical-align middle 
+        span.logo-text
+            display inline-block
+            vertical-align middle
+            margin-left $paddingBox
+    .cont-img-render
+        text-align center
+        .img-mascarade
+            margin auto
+            background $gray5
+            overflow hidden
+            border-radius 100%
+            size 220px
+            border 4px solid $white1
+            box-shadow rgba(0,0,0,0.2) 0px 4px 16px 0px
+            position relative
+            @media (max-width $screen-sm)
+                size 110px
+                position absolute
+                right $paddingBox
+                top $paddingBox
+            video, canvas
+            img.img-render
+                min-width 100%
+                min-height 100%
+                height 100%
+                position absolute
+                top -1000px
+                bottom -1000px
+                right -1000px
+                left -1000px
+                margin auto
+                border 1000px
+            
+            video, canvas
+                display none
+            canvas, img 
+                z-index 1
+        .img-description
+            @media (max-width $screen-sm)
+                display none
+            h2.img-title
+                font-size $text_h1
+.cont-body
+    box-sizing border-box
+    display flex
+    flex-direction column
+    nav.menu
+        text-align left
+        font-size $text_h4
+        padding 0
+        
+        &, a
+            color $textColor
+            text-decoration none 
+            transiton ease-in-out 250ms all
+        @media (max-width $screen-sm)
+            background $corp1
+            text-align center
+            a
+                color $orange1
+        /ul.options
+            defaultDisplay(flex)
+            box-sizing border-box
+            width 100%
+            @media (max-width $screen-sm)
+                background $orange3
+            li
+                width 100%
+                defaultDisplay(block)
+                
+                &.active a
+                    background transparent
+                    color  $corp1
+                    font-weight bold
+                    @media (max-width $screen-sm)
+                        color $white1
+                        font-weight normal
+                        &:after
+                            background $primary
+            a
+                display block
+                padding $paddingBox $paddingBox*3
+                background rgba($gray1, 0.12)
+                position relative
+                &:after
+                    beforeAfter block absolute 100% 3px
+                    top 100%
+                    left 0
+                    background transparent
+                @media (max-width $screen-sm)
+                    color $orange1
+                    background transparent
+        .item-title
             display none
+            font-size $text_h1
+            margin 0
+            padding $paddingBox $paddingBox*2
+            text-align left
+            @media (max-width $screen-sm)
+                display block
+                color $white1
+    .main-data
+        box-sizing border-box
+        overflow auto
+        max-width 100%
 
-.main-cont .camera-cont 
-    video, canvas
-        position absolute
-        width 100%
-        height 100%
-        border-radius 20px
-
-.controls-cont
+.float-menu
     position fixed
-    bottom 10px
-    right 10px
-    z-index 8
-    left auto
-    label input
-        height 1px
-        width 1px
-        position absolute
-        left -100px
-        top -100px
-        opacity 0.1
+    box-sizing border-box
+    bottom $paddingBox*3
+    right $paddingBox*4
+    size 48px
+    text-align center
+    
+    .btn-float
+        overflow hidden
+        border-radius 1000px
+        background $primary
+        size 56px
+        line-height @height
+        display inline-block
+        color $white1
+        box-shadow $box-shadow2
+        cursor pointer
+        position relative
+        top 0
+        transition all ease-in-out 250ms
+        &:hover
+            box-shadow $box-shadow2b
+            background lighten($primary, 10)
+            top -5px
+        input
+            position absolute
+            left -1000px
+            top @left
+            size 1px
+        .mdi
+            font-size 24px
+            display inline-block
