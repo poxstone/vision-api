@@ -59,7 +59,7 @@
                         
                         EndpointsImage.getImageSheet().then((imageNutriData) => {
                             console.log(imageNutriData);
-                            var rows = imageNutriData.values;
+                            var rows = imageNutriData;
                             var titles = rows[0];
                             var values = rows[1];
                             

@@ -98,7 +98,18 @@ def create_app():
                 'rowCount']
             range_str = '{}!A1:L{}'.format(sheet, max_rows)
             result = spreadHelper.getSheetValues(SPREAD_SHEET, range_str)
-            return flask.jsonify(result)
+            items = result['values']
+            query_word = 'manzana'
+            response = []
+            #value.append()
+            for ind, item in enumerate(items):
+                if ind == 0:
+                    response.append(item)
+                elif query_word in item[0].lower():
+                    response.append(item)
+                    break
+            
+            return flask.jsonify(response)
         except Exception as e:
             Logs.error('error_getSheet_sheet_info', e)
             return '{"error: "Error calling Sheet, please validate that ' \
