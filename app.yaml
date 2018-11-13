@@ -20,6 +20,7 @@ handlers:
 - url: /index\.html
   static_files: static/html/index.html
   upload: static/html/index\.html
+  secure: always
 - url: /.*
   secure: always
   redirect_http_response_code: 301
