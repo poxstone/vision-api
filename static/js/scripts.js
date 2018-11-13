@@ -12,16 +12,29 @@
         
         // INPUT LOAD FUNCTION
         document.querySelector('#UPLOAD_FILE').addEventListener('change', (event) => {
-            const ELEMENT_INFO = '#IMG_INFO';
-            const ELEMENT_TAGS = '#IMG_TAGS';
-            const IMG_PREVIEW = '#IMG_UPLOADED';
+            const ELEMENT_INFO = document.querySelector('#IMG_INFO');
+            const ELEMENT_TAGS = document.querySelector('#IMG_TAGS');
+            const IMG_PREVIEW = document.querySelector('#IMG_UPLOADED');
+            const IMG_NAME = document.querySelector('#IMG_NAME'); 
+            const IMG_TITLE = document.querySelector('#IMG_TITLE_CONT'); 
+            const BODY_ELEMENT = document.querySelector('html > body');
+            const EMPTY_CLASS = 'data-empty';
             var fileToLoad = event.target.files[0];
             var fileName = fileToLoad.name;
 
             // render image
             ImageHelper.imageToDataUrl(fileToLoad).then((imgDataUrl) => {
                 console.log('image to render: ', fileName, imgDataUrl);
-                document.querySelector(IMG_PREVIEW).setAttribute('src', imgDataUrl);
+                IMG_PREVIEW.setAttribute('src', imgDataUrl);
+                IMG_NAME.innerHTML = fileName;
+                IMG_TITLE.innerHTML = fileName;
+                BODY_ELEMENT.classList.remove(EMPTY_CLASS);
+
+                // Clear Divs
+                ELEMENT_INFO.innerHTML = '';
+                ELEMENT_TAGS.innerHTML = '';
+
+
             });
 
             // Upload pipe
@@ -42,7 +55,7 @@
                                 </li>`;
                         }
 
-                        document.querySelector(ELEMENT_TAGS).innerHTML = `${responseStr}`;
+                        ELEMENT_TAGS.innerHTML = `${responseStr}`;
                         
                         EndpointsImage.getImageSheet().then((imageNutriData) => {
                             console.log(imageNutriData);
@@ -59,7 +72,10 @@
                                         <i class="i-value">${value}</i>
                                     </li>`;
                             }
-                            document.querySelector(ELEMENT_INFO).innerHTML = `${responseStr}`;
+                            ELEMENT_INFO.innerHTML = `${responseStr}`;
+                            IMG_NAME.innerHTML = values[0];
+                            IMG_TITLE.innerHTML = values[0];
+                            
                         })
                     });
                 });

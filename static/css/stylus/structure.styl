@@ -244,3 +244,36 @@ html, body
         .mdi
             font-size 24px
             display inline-block
+
+.empty-msn
+    position absolute
+    top 0
+    left 0
+    bottom 0
+    right 0
+    margin auto
+    max-width 320px
+    height 220px
+    text-align center
+    color rgba($textColor,0.5)
+    display flex
+    flex-direction column
+    display none
+    .empty-icon, .empty-text
+        display block
+    i.empty-icon
+        font-size 96px
+    span.empty-text
+        font-size $text_h4
+
+body.data-empty
+    &:before
+        background-image url('/static/img/')
+    .header-cont
+        background transparent
+    .cont-img-render
+    .menu
+        display none
+    .empty-msn
+        display block
+        
