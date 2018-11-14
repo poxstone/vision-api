@@ -33,8 +33,6 @@
                 // Clear Divs
                 ELEMENT_INFO.innerHTML = '';
                 ELEMENT_TAGS.innerHTML = '';
-
-
             });
 
             // Upload pipe
@@ -46,6 +44,7 @@
                     
                     EndpointsImage.getImageInfo(fileName).then((imageInfoData) => {
                         var labels = imageInfoData.labels;
+                        var colors = imageInfoData.colors;
 
                         var responseStr = '';
                         for (let indx=0;indx < imageInfoData.labels.length; indx++ ) {
@@ -57,7 +56,7 @@
 
                         ELEMENT_TAGS.innerHTML = `${responseStr}`;
                         
-                        EndpointsImage.getImageSheet().then((imageNutriData) => {
+                        EndpointsImage.getImageSheet(labels).then((imageNutriData) => {
                             console.log(imageNutriData);
                             var rows = imageNutriData;
                             var titles = rows[0];
@@ -65,16 +64,21 @@
                             
                             var responseStr = '';
                             for (let indx=0;indx < titles.length; indx++ ) {
-                                var title = titles[indx];
-                                var value = values[indx];
-                                responseStr += `<li class="item">
-                                        <b class="i-key">${title}</b>
-                                        <i class="i-value">${value}</i>
-                                    </li>`;
+                                try {
+                                    var title = titles[indx];
+                                    var value = values[indx];
+                                    responseStr += `<li class="item">
+                                            <b class="i-key">${title}</b>
+                                            <i class="i-value">${value}</i>
+                                        </li>`;
+                                } catch(err) {
+                                    alert('Vision API no encontró información');
+                                    return false;
+                                }
                             }
                             ELEMENT_INFO.innerHTML = `${responseStr}`;
-                            IMG_NAME.innerHTML = values[0];
-                            IMG_TITLE.innerHTML = values[0];
+                            IMG_NAME.innerHTML = values[1];
+                            IMG_TITLE.innerHTML = values[1];
                             
                         })
                     });

@@ -64,8 +64,18 @@ class EndpointsImage {
         });         
     }
 
-    static getImageSheet() {
+    static getImageSheet(fruit_labels=null) {
         return new Promise((resolve, reject) => {
+            // Prepare tags
+            var tags = '';
+            if (fruit_labels && fruit_labels.length){
+                for (let indx=0;indx < fruit_labels.length; indx++) {
+                    tags += fruit_labels[indx].label + ',';
+                }
+            }
+            tags = tags.replace(/,$/,'');
+
+            // Prepare ajax
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
@@ -74,7 +84,7 @@ class EndpointsImage {
                     resolve(response);
                 }
             };
-            xhttp.open("GET", "/sheet/", true);
+            xhttp.open("GET", "/sheet/?fruit_tags=" + tags, true);
             // excecute
             xhttp.send(); 
         }); 

@@ -1,10 +1,10 @@
 import flask
-from flask import Flask, redirect
+from flask import Flask, redirect, request
 
 from .helpers import VisionHelper, FirestoreHelper, Oauth2Helper, SpreadHelper
 from .constants import BUCKET, PROJECT_ID, SPREAD_SHEET
 
-from .utils import Logs
+from .utils import Logs, FruitTools
 
 
 # Run flask
@@ -91,6 +91,11 @@ def create_app():
         spreadHelper = SpreadHelper(credential)
 
         try:
+            fruits_param = request.args.get('fruit_tags')
+            fruit_tags = []
+            if fruits_param != '':
+                fruit_tags = fruits_param.lower().split(',')
+            
             sheet_info = spreadHelper.getSheetInfo(SPREAD_SHEET)
 
             sheet = sheet_info['sheets'][0]['properties']['title']
@@ -98,16 +103,9 @@ def create_app():
                 'rowCount']
             range_str = '{}!A1:L{}'.format(sheet, max_rows)
             result = spreadHelper.getSheetValues(SPREAD_SHEET, range_str)
-            items = result['values']
-            query_word = 'manzana'
-            response = []
-            #value.append()
-            for ind, item in enumerate(items):
-                if ind == 0:
-                    response.append(item)
-                elif query_word in item[0].lower():
-                    response.append(item)
-                    break
+            rows = result['values']
+            
+            response = FruitTools.searchInTags(rows, fruit_tags)
             
             return flask.jsonify(response)
         except Exception as e:
