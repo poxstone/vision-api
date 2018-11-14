@@ -30,15 +30,16 @@ html, body
     @media (max-width $screen-sm)
         flex-direction column
     .header-cont
-        width 360px
+        width 33%
+        max-width 320px
+        min-width: 220px
         @media (max-width $screen-sm)
             width auto
-            height 110px
+            max-width none
             padding $paddingBox*1.5 $paddingBox*2
     .cont-body
         width auto
         flex-grow 1
-
 
 .header-cont
     background $white1
@@ -91,7 +92,6 @@ html, body
                 left -1000px
                 margin auto
                 border 1000px
-            
             video, canvas
                 display none
             canvas, img 
@@ -103,6 +103,11 @@ html, body
                 display none
             h2.img-title
                 font-size $text_h1
+                box-sizing: border-box
+                text-overflow ellipsis
+                white-space nowrap
+                overflow hidden
+                max-width 100%
             h3.img-subtitle
                 text-align left
                 margin 0px

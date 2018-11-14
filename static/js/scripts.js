@@ -38,7 +38,7 @@
             // Upload pipe
             ImageHelper.imageToBuffer(fileToLoad).then((bufferFile) => {
 
-                FirebaseStorage.uploadImage(bufferFile).then( (snapshot) => {
+                FirebaseStorage.uploadImage(bufferFile, fileName).then( (snapshot) => {
 
                     console.log('info_Uploaded_a_blob_or_file:', snapshot);
                     
@@ -58,23 +58,24 @@
                         
                         EndpointsImage.getImageSheet(labels).then((imageNutriData) => {
                             console.log(imageNutriData);
+                            if (!rows[0].length || !rows[2].length) {
+                                alert('No se encontraron resultados');
+                                return false;
+                            }
+
                             var rows = imageNutriData;
                             var titles = rows[0];
                             var values = rows[1];
                             
                             var responseStr = '';
                             for (let indx=0;indx < titles.length; indx++ ) {
-                                try {
-                                    var title = titles[indx];
-                                    var value = values[indx];
-                                    responseStr += `<li class="item">
-                                            <b class="i-key">${title}</b>
-                                            <i class="i-value">${value}</i>
-                                        </li>`;
-                                } catch(err) {
-                                    alert('Vision API no encontró información');
-                                    return false;
-                                }
+                               
+                                var title = titles[indx];
+                                var value = values[indx];
+                                responseStr += `<li class="item">
+                                        <b class="i-key">${title}</b>
+                                        <i class="i-value">${value}</i>
+                                    </li>`;
                             }
                             ELEMENT_INFO.innerHTML = `${responseStr}`;
                             IMG_NAME.innerHTML = values[1];
