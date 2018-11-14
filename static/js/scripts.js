@@ -10,6 +10,13 @@
         var storageRef = firebase.storage().ref();
         var imagesRef = storageRef.child(BUCKET_DIR);
         
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'You loaded this page on ' + new Date().toLocaleString()
+            }
+        })
+
         // INPUT LOAD FUNCTION
         document.querySelector('#UPLOAD_FILE').addEventListener('change', (event) => {
             const ELEMENT_INFO = document.querySelector('#IMG_INFO');

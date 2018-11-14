@@ -9,13 +9,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
     <script src="/static/js/constants.js"></script>
     <script src="/static/js/HelperImages.js"></script>
     <script src="/static/js/scripts.js"></script>
   </head>
   <body class="data-empty" onload="loadApp()">
-    <div class="empty-msn" id="EMPTY"><i class="empty-icon mdi mdi-image-plus"></i><span class="empty-text">Cargue una imagen para ver su descripción</span></div>
+    <div class="empty-msn" id="EMPTY"><i class="empty-icon mdi mdi-image-plus"></i><span class="empty-text">Cargue una imagen para ver su descripción
+        <div id="app"><span v-bind:title="message">{{ message }}</span></div></span></div>
     <div class="wrapper" id="WRAPPER">
       <header class="header-cont" id="HEADER">
         <h1 class="logo-title"><img class="logo-ico" src="/static/img/favicon.svg" alt=""><span class="logo-text"><b>Vision</b><span>App</span></span></h1>
