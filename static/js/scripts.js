@@ -58,12 +58,13 @@
                         
                         EndpointsImage.getImageSheet(labels).then((imageNutriData) => {
                             console.log(imageNutriData);
-                            if (!rows[0].length || !rows[2].length) {
+                            var rows = imageNutriData;
+
+                            if (!rows.length || !rows[0].length || !rows[1].length) {
                                 alert('No se encontraron resultados');
                                 return false;
                             }
-
-                            var rows = imageNutriData;
+                            
                             var titles = rows[0];
                             var values = rows[1];
                             
