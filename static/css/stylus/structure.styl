@@ -111,27 +111,28 @@ html, body
                 white-space nowrap
                 overflow hidden
                 max-width 100%
+                margin $paddingBox 0
             h3.img-subtitle
                 text-align left
                 margin 0px
                 padding 0px 0px 8px
             ul.label-collection
-                text-align left
                 defaultDisplay(block)
-                padding-left $paddingBox
+                text-align left
                 overflow auto
-                width: 100%
+                overflow-x hidden
+                width 100%
                 box-sizing border-box
                 li.item
-                    defaultDisplay(block)
-                    padding 2px
-                    
+                    defaultDisplay(inline-block)
+                    padding 2px 8px
+                    background $gray5
+                    margin 2px
+                    border-radius 100px
+                    font-size $text_ps
                     .i-key, .i-value
                         display inline-block
                         padding 2px 0px
-                    .i-key:after
-                        beforeAfter inline relative auto auto 
-                        content ':'
                     .i-value
                         padding-left 4px
                         display inline

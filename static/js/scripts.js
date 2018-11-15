@@ -73,16 +73,10 @@
                     
                     EndpointsImage.getImageSheet(labels).then((nutriData) => {
                         console.log(nutriData);
-                        if (nutriData.length) {
-                            nutriData =   [{
-                                title: 'No se encontraron resultados en la hoja de clculo',
-                                value:''
-                            }];
-                        }
-                       
                         APP.$data.nutriList = nutriData;
-                        APP.$data.fruitName = values[1];
-                        
+                        if (nutriData.length > 1) {
+                            APP.$data.fruitName = nutriData[1].value;
+                        }
                     })
                 });
             });

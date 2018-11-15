@@ -4,7 +4,7 @@ from flask import request
 class Logs:
     @staticmethod
     def isLocal():
-        if not 'localhost' in request.host:
+        if 'localhost' in request.host:
             return True
         else:
             return False
@@ -59,8 +59,13 @@ class FruitTools:
             elif ind > 1 and len(fruit_tags) > 0:
                 tag_sheet = row[0].lower()
                 if FruitTools.compareTags(fruit_tags, tag_sheet):
+                    Logs.info('info_FruitTools.searchInTags_{} in '.format(
+                        fruit_tags), tag_sheet)
                     response['data'] = row
                     break
+        if 'data' not in response:
+            response['title'] = ['message']
+            response['data'] = ['lables not match']
         return FruitTools.joinTitleData(response['title'], response['data'])
 
     @staticmethod
@@ -78,7 +83,7 @@ class FruitTools:
                 return True
 
     @staticmethod
-    def joinTitleData(titles, data):
+    def joinTitleData(titles=[], data=[]):
         result = []
         for indx, value in enumerate(data):
             result.append({'title': titles[indx], 'value': value})

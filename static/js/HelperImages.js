@@ -82,6 +82,8 @@ class EndpointsImage {
                     var response = JSON.parse(this.responseText);
                     console.log(response);
                     resolve(response);
+                } else {
+                    console.log('backend error', this.status, this.responseText);
                 }
             };
             xhttp.open("GET", "/sheet/?fruit_tags=" + tags, true);

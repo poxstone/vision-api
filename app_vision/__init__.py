@@ -106,11 +106,10 @@ def create_app():
             rows = result['values']
             
             response_dict = FruitTools.searchInTags(rows, fruit_tags)
-            
             return flask.jsonify(response_dict)
         except Exception as e:
             Logs.error('error_getSheet_sheet_info', e)
-            return '{"error: "Error calling Sheet, please validate that ' \
-                   'exists"}', 500
+            return '[{"title":"error", "message": "Error calling Sheet, please validate that ' \
+                   'exists"}]', 500
 
     return app
