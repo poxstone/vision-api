@@ -40,8 +40,8 @@
           <nav class="menu" id="MENU">
             <h2 class="item-title" id="IMG_TITLE_CONT">{{ fruitName }}</h2>
             <ul class="options">
-              <li v-bind:class="{&quot;active&quot;:(menuToShow == 0)}"><a id="NUTRITION" href="#DATA_NUTRITION" v-on:click="showMenu(0)">Nutrución</a></li>
-              <li v-bind:class="{&quot;active&quot;:(menuToShow == 1)}"><a id="STATE" href="#DATA_STATE" v-on:click="showMenu(1)">Estado</a></li>
+              <li v-bind:class="{&quot;active&quot;:(menuToShow == 0)}"><a id="NUTRITION" v-on:click="showMenu(0)">Nutrución</a></li>
+              <li v-bind:class="{&quot;active&quot;:(menuToShow == 1)}"><a id="STATE" v-on:click="showMenu(1)">Estado</a></li>
             </ul>
           </nav>
           <main class="main-data" id="CONT_DATA">

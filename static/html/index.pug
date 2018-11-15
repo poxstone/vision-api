@@ -50,9 +50,9 @@ html(lang='en')
             h2#IMG_TITLE_CONT.item-title {{ fruitName }}
             ul.options
               li(v-bind:class='{"active":(menuToShow == 0)}')
-                a#NUTRITION(href='#DATA_NUTRITION', v-on:click='showMenu(0)') Nutrución
+                a#NUTRITION(v-on:click='showMenu(0)') Nutrución
               li(v-bind:class='{"active":(menuToShow == 1)}')
-                a#STATE(href='#DATA_STATE', v-on:click='showMenu(1)') Estado
+                a#STATE(v-on:click='showMenu(1)') Estado
           
           main#CONT_DATA.main-data
             #DATA_NUTRITION.data(v-if='menuToShow == 0')
