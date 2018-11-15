@@ -4,7 +4,7 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
-    title VisionApp
+    title VisionFruits
     
     link(rel='icon', type='image/svg+xml', href='/static/img/favicon.svg', sizes='any')
     link(href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css', rel='stylesheet')
@@ -30,7 +30,7 @@ html(lang='en')
             img.logo-ico(src='/static/img/favicon.svg')
             span.logo-text
               b Vision
-              span App
+              span fruits
           .cont-img-render
             .img-mascarade
               img#IMG_UPLOADED.img-render(v-bind:src='imgFruitSrc')
@@ -55,12 +55,12 @@ html(lang='en')
                 a#STATE(v-on:click='showMenu(1)') Estado
           
           main#CONT_DATA.main-data
-            #DATA_NUTRITION.data(v-if='menuToShow == 0')
+            #DATA_NUTRITION.data(v-if='menuToShow == 0', v-bind:class='{"is-empty":(nutriList.length == 0)}')
               ul#IMG_INFO.data-collection(v-if='nutriList')
                 li.item(v-for='fruit in nutriList')
                   b.i-key {{fruit.title}}
                   i.i-value {{fruit.value}}
-            #DATA_STATE.data(v-if='menuToShow == 1')
+            #DATA_STATE.data(v-if='menuToShow == 1', v-bind:class='{"is-empty":(colorList.length == 0)}')
               ul.data-color(v-if='colorList.length')
                 li.item(v-for='fruitColor in colorList')
                   b.i-band(v-bind:style='{background:fruitColor.rgb, width:(fruitColor.pixel_fraction*1000)+"%"}')

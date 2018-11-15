@@ -59,7 +59,7 @@ html, body
         span.logo-text
             display inline-block
             vertical-align middle
-            margin-left $paddingBox
+            margin-left 0
     .cont-img-render
         text-align center
         display flex
@@ -75,7 +75,18 @@ html, body
             border 4px solid $white1
             box-shadow rgba(0,0,0,0.2) 0px 4px 16px 0px
             position relative
-            transition ease-in-out all 300ms
+            transition ease-in-out all 600ms
+            &:after
+                beforeAfter block absolute 100% 100%
+                position  absolute
+                top 0
+                left 0
+                opacity 0
+                z-index 3
+                filter saturate(100) hue-rotate(270deg)
+                transition ease-in-out all 250ms
+                background rgba($white1,0.9) url('/static/img/analize_img2.gif') no-repeat center center
+
             @media (max-width $screen-sm)
                 size 110px
                 min-height @height
@@ -179,11 +190,16 @@ html, body
                 padding $paddingBox $paddingBox*3
                 background rgba($gray1, 0.12)
                 position relative
+                cursor pointer
+                transition ease-in-out 250ms
+                &:hover
+                    color $primary
                 &:after
                     beforeAfter block absolute 100% 3px
                     top 100%
                     left 0
                     background transparent
+                    transition ease-in-out 250ms
                 @media (max-width $screen-sm)
                     color $orange1
                     background transparent
@@ -201,6 +217,26 @@ html, body
         overflow auto
         max-width 100%
         padding $paddingBox*2 $paddingBox*3 100px
+        .data
+            position relative
+            min-height 320px
+            filter grayscale(0%)
+            transition ease-in-out all 250ms
+            &:before
+                beforeAfter block absolute 100% 100%
+                position  absolute
+                top 0
+                left 0
+                opacity 0
+                z-index 3
+                background transparent url('/static/img/analize_img3.gif') no-repeat center center
+                background-size 80px auto
+                transition ease-in-out all 250ms
+            &.is-empty
+                filter grayscale(100%)
+                max-height 100%
+                &:before
+                    opacity 0.5
         ul.data-collection
             display block
             padding 0
@@ -308,6 +344,7 @@ body .data-empty
         background transparent
     .cont-img-render
     .menu
+    .cont-body
         display none
     .empty-msn
         display block
@@ -331,3 +368,7 @@ body .data-empty
             left 0
             right 0
             size 220px
+            position relative
+            &:after
+                opacity 0.5
+            

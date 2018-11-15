@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>VisionApp</title>
+    <title>VisionFruits</title>
     <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg" sizes="any">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
       <div class="empty-msn" id="EMPTY"><i class="empty-icon mdi mdi-image-plus"></i><span class="empty-text">Cargue una imagen para ver su descripción</span></div>
       <div class="wrapper" id="WRAPPER">
         <header class="header-cont" id="HEADER">
-          <h1 class="logo-title"><img class="logo-ico" src="/static/img/favicon.svg"><span class="logo-text"><b>Vision</b><span>App</span></span></h1>
+          <h1 class="logo-title"><img class="logo-ico" src="/static/img/favicon.svg"><span class="logo-text"><b>Vision</b><span>fruits</span></span></h1>
           <div class="cont-img-render">
             <div class="img-mascarade"><img class="img-render" id="IMG_UPLOADED" v-bind:src="imgFruitSrc">
               <div class="camera-cont">
@@ -45,12 +45,12 @@
             </ul>
           </nav>
           <main class="main-data" id="CONT_DATA">
-            <div class="data" id="DATA_NUTRITION" v-if="menuToShow == 0">
+            <div class="data" id="DATA_NUTRITION" v-if="menuToShow == 0" v-bind:class="{&quot;is-empty&quot;:(nutriList.length == 0)}">
               <ul class="data-collection" id="IMG_INFO" v-if="nutriList">
                 <li class="item" v-for="fruit in nutriList"><b class="i-key">{{fruit.title}}</b><i class="i-value">{{fruit.value}}</i></li>
               </ul>
             </div>
-            <div class="data" id="DATA_STATE" v-if="menuToShow == 1">
+            <div class="data" id="DATA_STATE" v-if="menuToShow == 1" v-bind:class="{&quot;is-empty&quot;:(colorList.length == 0)}">
               <ul class="data-color" v-if="colorList.length">
                 <li class="item" v-for="fruitColor in colorList"><b class="i-band" v-bind:style="{background:fruitColor.rgb, width:(fruitColor.pixel_fraction*1000)+&quot;%&quot;}"></b><i class="i-value">{{ (fruitColor.pixel_fraction*1000).toFixed(2) }}</i></li>
               </ul>

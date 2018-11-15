@@ -16,7 +16,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="visionApp-design.svg"
+   sodipodi:docname="mockup.svg"
    inkscape:export-filename="./web.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -27,11 +27,11 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.31744792"
-     inkscape:cx="1287.4794"
-     inkscape:cy="997.4061"
+     inkscape:zoom="0.63489584"
+     inkscape:cx="2137.0563"
+     inkscape:cy="1660.707"
      inkscape:document-units="px"
-     inkscape:current-layer="layer13"
+     inkscape:current-layer="g2951"
      showgrid="false"
      units="px"
      width="1920px"
@@ -545,91 +545,101 @@
        id="g2951"
        transform="translate(-155.2305,-507.99996)">
       <g
-         transform="matrix(1.5341681,0,0,1.5341681,2215.3268,-137.89244)"
-         id="g2524">
+         id="Layer_2"
+         transform="matrix(1.5341681,0,0,1.5341681,2215.3268,-137.89244)" />
+      <text
+         id="text2557"
+         y="-68.579597"
+         x="2317.0569"
+         style="font-style:normal;font-weight:normal;font-size:51.71475601px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4f5d73;fill-opacity:1;stroke:none;stroke-width:1.29286885"
+         xml:space="preserve"><tspan
+           style="fill:#4f5d73;fill-opacity:1;stroke-width:1.29286885"
+           y="-68.579597"
+           x="2317.0569"
+           id="tspan2555"
+           sodipodi:role="line"><tspan
+   id="tspan2929"
+   style="font-weight:bold;fill:#4f5d73;fill-opacity:1;stroke-width:1.29286885">Vision</tspan>Fruits</tspan></text>
+      <g
+         id="g1078"
+         transform="matrix(1.7606549,0,0,1.7606549,2205.7497,-143.64455)">
         <g
-           id="Layer_1">
+           id="Layer_1-3">
+          <path
+             style="fill:#ff7f2a;stroke-width:0.68686616"
+             d="M 23.211134,10.666012 C 14.784402,13.969147 9.2590912,21.950254 9.2542372,30.826224 c -2.8e-5,12.002724 9.9524738,21.732862 22.2294988,21.732835 12.277025,2.7e-5 22.229527,-9.730111 22.229499,-21.732835 -0.0092,-3.688302 -0.978398,-7.313635 -2.816319,-10.534652 -1.356229,0.207269 -2.734506,0.320582 -4.10958,0.28039 -2.972567,-0.08689 -6.066988,-0.938666 -8.313573,-3.247996 -3.000658,-3.084454 -5.609597,-4.637316 -7.40152,-5.431902 -1.791922,-0.794592 -2.51527,-0.809822 -2.51527,-0.809822 z"
+             id="circle2-6"
+             inkscape:connector-curvature="0" />
           <g
-             id="g4">
+             id="g8-7"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)"
+             style="opacity:0.2">
             <circle
-               cx="32"
-               cy="32"
-               r="32"
-               id="circle2"
-               style="fill:#ff7f2a" />
-          </g>
-          <g
-             style="opacity:0.2"
-             id="g8">
-            <circle
-               style="fill:#231f20"
                cx="32"
                cy="34"
                r="20"
-               id="circle6" />
+               id="circle6-5"
+               style="fill:#231f20" />
           </g>
           <g
-             id="g12">
+             id="g12-3"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)">
             <circle
-               style="fill:#ffffff"
                cx="32"
                cy="32"
                r="20"
-               id="circle10" />
+               id="circle10-5"
+               style="fill:#ffffff" />
           </g>
           <g
-             id="g16">
+             id="g16-6"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)">
             <circle
                cx="32"
                cy="32"
                r="12"
-               id="circle14"
+               id="circle14-2"
                style="fill:#4db9dc;fill-opacity:1" />
           </g>
           <g
-             id="g20">
+             id="g20-9"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)">
             <circle
-               style="fill:#4f5d73"
                cx="32"
                cy="32"
                r="4"
-               id="circle18" />
+               id="circle18-1"
+               style="fill:#4f5d73" />
           </g>
           <g
-             id="g24">
+             id="g24-2"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)">
             <circle
-               style="fill:#ffffff"
                cx="34"
                cy="30"
                r="2"
-               id="circle22" />
+               id="circle22-7"
+               style="fill:#ffffff" />
           </g>
           <g
-             id="g28">
+             id="g28-0"
+             transform="matrix(0.69467034,0,0,0.67914962,9.2542372,9.0939066)">
             <circle
-               style="fill:#ffffff"
                cx="40"
                cy="24"
                r="4"
-               id="circle26" />
+               id="circle26-9"
+               style="fill:#ffffff" />
           </g>
+          <path
+             style="display:inline;opacity:1;vector-effect:none;fill:#84c000;fill-opacity:1;stroke:none;stroke-width:5.13380861;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+             d="m 28.763691,8.5515746 c 0,0 5.149822,0.401072 11.591256,7.0223864 6.614136,6.798863 23.806086,-2.606919 23.806086,-2.606919 0,0 -10.55101,3.655761 -15.554804,-6.4330644 -5.389766,-10.867 -19.842538,2.017597 -19.842538,2.017597 z"
+             id="path207-3"
+             inkscape:connector-curvature="0" />
         </g>
         <g
-           id="Layer_2" />
+           id="Layer_2-6" />
       </g>
-      <text
-         id="text2557"
-         y="-70.579597"
-         x="2329.0569"
-         style="font-style:normal;font-weight:normal;font-size:51.71475601px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4f5d73;fill-opacity:1;stroke:none;stroke-width:1.29286885"
-         xml:space="preserve"><tspan
-           style="fill:#4f5d73;fill-opacity:1;stroke-width:1.29286885"
-           y="-70.579597"
-           x="2329.0569"
-           id="tspan2555"
-           sodipodi:role="line"><tspan
-   id="tspan2929"
-   style="font-weight:bold;fill:#4f5d73;fill-opacity:1;stroke-width:1.29286885">Vision</tspan>App</tspan></text>
     </g>
     <g
        inkscape:groupmode="layer"
@@ -818,14 +828,14 @@
       <image
          sodipodi:absref="./banana_tmp.png"
          xlink:href="banana_tmp.png"
-         transform="matrix(0.95000002,0,0,0.95000002,139.58326,45.486396)"
-         clip-path="url(#clipPath2593-9)"
-         y="23.379219"
-         x="2459.4885"
-         id="image2573"
-         preserveAspectRatio="none"
+         width="515"
          height="400"
-         width="515" />
+         preserveAspectRatio="none"
+         id="image2573"
+         x="2459.4885"
+         y="23.379219"
+         clip-path="url(#clipPath2593-9)"
+         transform="matrix(0.95000002,0,0,0.95000002,139.58326,45.486396)" />
     </g>
     <use
        style="display:inline"
