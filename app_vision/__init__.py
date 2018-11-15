@@ -25,7 +25,7 @@ def create_app():
         response_labels = visionApi.getLocalLabels(img_bucket)
 
         response_json = {
-            'color': response_color,
+            'colors': response_color,
             'labels': response_labels
         }
 

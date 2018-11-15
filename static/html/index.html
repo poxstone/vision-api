@@ -14,14 +14,14 @@
     <script src="/static/js/constants.js"></script>
     <script src="/static/js/HelperImages.js"></script>
   </head>
-  <body class="data-empty">
-    <div id="app">
-      <div class="empty-msn" id="EMPTY"><i class="empty-icon mdi mdi-image-plus"></i><span class="empty-text">Cargue una imagen para ver su descripción</span></div>
+  <body>
+    <div class="app" id="app" v-bind:class="{&quot;image-readed&quot;:isImageReaded, &quot;data-empty&quot;:isDataEmpty}">
+      <div class="empty-msn" id="EMPTY" v-if="isDataEmpty"><i class="empty-icon mdi mdi-image-plus"></i><span class="empty-text">Cargue una imagen para ver su descripción</span></div>
       <div class="wrapper" id="WRAPPER">
         <header class="header-cont" id="HEADER">
-          <h1 class="logo-title"><img class="logo-ico" src="/static/img/favicon.svg" alt=""><span class="logo-text"><b>Vision</b><span>App</span></span></h1>
+          <h1 class="logo-title"><img class="logo-ico" src="/static/img/favicon.svg"><span class="logo-text"><b>Vision</b><span>App</span></span></h1>
           <div class="cont-img-render">
-            <div class="img-mascarade"><img class="img-render" id="IMG_UPLOADED">
+            <div class="img-mascarade"><img class="img-render" id="IMG_UPLOADED" v-bind:src="imgFruitSrc">
               <div class="camera-cont">
                 <video id="VIDEO" autoplay=""></video>
                 <canvas id="CANVAS"></canvas>
@@ -29,8 +29,10 @@
             </div>
             <div class="img-description">
               <h2 class="img-title" id="IMG_NAME">{{ fruitName }}</h2>
-              <h3 class="img-subtitle">Tags (%):</h3>
-              <ul class="label-collection" id="IMG_TAGS"></ul>
+              <h3 class="img-subtitle">Tags:</h3>
+              <ul class="label-collection" id="IMG_TAGS">
+                <li class="item" v-for="tag in tagsList"><b class="i-key">{{tag.title}}</b><i class="i-value">{{tag.value.toFixed(2)}}</i></li>
+              </ul>
             </div>
           </div>
         </header>
@@ -38,21 +40,27 @@
           <nav class="menu" id="MENU">
             <h2 class="item-title" id="IMG_TITLE_CONT">{{ fruitName }}</h2>
             <ul class="options">
-              <li class="active"><a id="NUTRITION" href="#DATA_NUTRITION">Nutrución</a></li>
-              <li><a id="STATE" href="#DATA_STATE">Estado</a></li>
+              <li v-bind:class="{&quot;active&quot;:(menuToShow == 0)}"><a id="NUTRITION" href="#DATA_NUTRITION" v-on:click="showMenu(0)">Nutrución</a></li>
+              <li v-bind:class="{&quot;active&quot;:(menuToShow == 1)}"><a id="STATE" href="#DATA_STATE" v-on:click="showMenu(1)">Estado</a></li>
             </ul>
           </nav>
           <main class="main-data" id="CONT_DATA">
-            <div class="data" id="DATA_NUTRITION">
-              <ul class="data-collection" id="IMG_INFO"></ul>
-              <ul class="data-collection"></ul>
+            <div class="data" id="DATA_NUTRITION" v-if="menuToShow == 0">
+              <ul class="data-collection" id="IMG_INFO" v-if="nutriList.length">
+                <li class="item" v-for="fruit in nutriList"><b class="i-key">{{fruit.title}}</b><i class="i-value">{{fruit.value}}</i></li>
+              </ul>
+            </div>
+            <div class="data" id="DATA_STATE" v-if="menuToShow == 1">
+              <ul class="data-color" v-if="colorList.length">
+                <li class="item" v-for="fruitColor in colorList"><b class="i-band" v-bind:style="{background:fruitColor.rgb, width:(fruitColor.pixel_fraction*1000)+&quot;%&quot;}"></b><i class="i-value">{{ (fruitColor.pixel_fraction*1000).toFixed(2) }}</i></li>
+              </ul>
             </div>
           </main>
         </div>
       </div>
       <div class="float-menu" id="FLOAT_BTN">
         <label class="btn-float">
-          <input id="UPLOAD_FILE" type="file"><i class="mdi mdi-image-plus"></i>
+          <input id="UPLOAD_FILE" type="file" v-on:change="loadImage"><i class="mdi mdi-image-plus"></i>
         </label>
       </div>
     </div>

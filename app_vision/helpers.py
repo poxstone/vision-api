@@ -152,9 +152,9 @@ class VisionHelper:
             for color in props.dominant_colors.colors:
                 properties_color = {
                     'pixel_fraction': color.pixel_fraction,
-                    'rgb': 'rgb({},{},{})'.format(color.color.red,
-                                                       color.color.green,
-                                                       color.color.blue)}
+                    'rgb': 'rgb({},{},{})'.format(int(color.color.red),
+                                                int(color.color.green),
+                                                int(color.color.blue))}
                 Logs.info('info_getImageProperties', properties_color)
                 arr_color.append(properties_color)
 

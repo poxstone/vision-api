@@ -18,63 +18,57 @@ html(lang='en')
     script(src='/static/js/HelperImages.js')
     //-script(src='/static/js/HelperCamera.js')
  
-  body.data-empty
-    #app
-      #EMPTY.empty-msn
+  body
+    #app.app(v-bind:class='{"image-readed":isImageReaded, "data-empty":isDataEmpty}')
+      #EMPTY.empty-msn(v-if="isDataEmpty")
         i.empty-icon.mdi.mdi-image-plus
         span.empty-text Cargue una imagen para ver su descripción
 
       #WRAPPER.wrapper
         header#HEADER.header-cont
           h1.logo-title
-            img.logo-ico(src='/static/img/favicon.svg', alt='')
+            img.logo-ico(src='/static/img/favicon.svg')
             span.logo-text
               b Vision
               span App
           .cont-img-render
             .img-mascarade
-              img#IMG_UPLOADED.img-render
+              img#IMG_UPLOADED.img-render(v-bind:src='imgFruitSrc')
               .camera-cont
                 video#VIDEO(autoplay='')
                 canvas#CANVAS
             .img-description
               h2#IMG_NAME.img-title {{ fruitName }}
-              h3.img-subtitle Tags (%):
+              h3.img-subtitle Tags:
               ul#IMG_TAGS.label-collection
-                //-#DATA_STATE.data
-                  - for (var i=1; i<30;i++)
-                    li.item
-                      b.i-key Pera
-                      i.i-value #{i}0
+                li.item(v-for='tag in tagsList')
+                  b.i-key {{tag.title}}
+                  i.i-value {{tag.value.toFixed(2)}}
         
         #CONT.cont-body
           nav#MENU.menu
             h2#IMG_TITLE_CONT.item-title {{ fruitName }}
             ul.options
-              li.active
-                a#NUTRITION(href='#DATA_NUTRITION') Nutrución
-              li
-                a#STATE(href='#DATA_STATE') Estado
+              li(v-bind:class='{"active":(menuToShow == 0)}')
+                a#NUTRITION(href='#DATA_NUTRITION', v-on:click='showMenu(0)') Nutrución
+              li(v-bind:class='{"active":(menuToShow == 1)}')
+                a#STATE(href='#DATA_STATE', v-on:click='showMenu(1)') Estado
           
           main#CONT_DATA.main-data
-            #DATA_NUTRITION.data
-              ul#IMG_INFO.data-collection
-                //-#DATA_STATE.data
-                  - for (var i=1; i<30;i++)
-                    li.item
-                      b.i-key Cal c/100g
-                      i.i-value #{i}00
-
-              ul.data-collection
-                //-#DATA_STATE.data
-                  - for (var i=1; i<300;i++)
-                    li.item
-                      b.i-key Cal c/100g
-                      i.i-value #{i}00
+            #DATA_NUTRITION.data(v-if='menuToShow == 0')
+              ul#IMG_INFO.data-collection(v-if='nutriList.length')
+                li.item(v-for='fruit in nutriList')
+                  b.i-key {{fruit.title}}
+                  i.i-value {{fruit.value}}
+            #DATA_STATE.data(v-if='menuToShow == 1')
+              ul.data-color(v-if='colorList.length')
+                li.item(v-for='fruitColor in colorList')
+                  b.i-band(v-bind:style='{background:fruitColor.rgb, width:(fruitColor.pixel_fraction*1000)+"%"}')
+                  i.i-value {{ (fruitColor.pixel_fraction*1000).toFixed(2) }}
         
       #FLOAT_BTN.float-menu
         label.btn-float
-          input#UPLOAD_FILE(type='file')
+          input#UPLOAD_FILE(type='file', v-on:change='loadImage')
           i.mdi.mdi-image-plus
 
   script(src='/static/js/scripts.js')
