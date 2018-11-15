@@ -51,18 +51,17 @@ class Logs:
 class FruitTools:
     @staticmethod
     def searchInTags(rows, fruit_tags):
-        response = []
+        response = {}
         for ind, row in enumerate(rows):
             if ind == 0:
                 # add titles
-                response.append(row)
+                response['title'] = row
             elif ind > 1 and len(fruit_tags) > 0:
                 tag_sheet = row[0].lower()
                 if FruitTools.compareTags(fruit_tags, tag_sheet):
-                    response.append(row)
+                    response['data'] = row
                     break
-
-        return response
+        return FruitTools.joinTitleData(response['title'], response['data'])
 
     @staticmethod
     def noAllowedTags(tag):
@@ -77,3 +76,11 @@ class FruitTools:
             if FruitTools.noAllowedTags(tag) and tag.lower() in tag_sheet.lower():
                 # add value find
                 return True
+
+    @staticmethod
+    def joinTitleData(titles, data):
+        result = []
+        for indx, value in enumerate(data):
+            result.append({'title': titles[indx], 'value': value})
+
+        return result

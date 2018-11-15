@@ -29,7 +29,7 @@
             </div>
             <div class="img-description">
               <h2 class="img-title" id="IMG_NAME">{{ fruitName }}</h2>
-              <h3 class="img-subtitle">Tags:</h3>
+              <h3 class="img-subtitle">Labels:</h3>
               <ul class="label-collection" id="IMG_TAGS">
                 <li class="item" v-for="tag in tagsList"><b class="i-key">{{tag.title}}</b><i class="i-value">{{tag.value.toFixed(2)}}</i></li>
               </ul>
@@ -46,7 +46,7 @@
           </nav>
           <main class="main-data" id="CONT_DATA">
             <div class="data" id="DATA_NUTRITION" v-if="menuToShow == 0">
-              <ul class="data-collection" id="IMG_INFO" v-if="nutriList.length">
+              <ul class="data-collection" id="IMG_INFO" v-if="nutriList">
                 <li class="item" v-for="fruit in nutriList"><b class="i-key">{{fruit.title}}</b><i class="i-value">{{fruit.value}}</i></li>
               </ul>
             </div>

@@ -101,13 +101,13 @@ def create_app():
             sheet = sheet_info['sheets'][0]['properties']['title']
             max_rows = sheet_info['sheets'][0]['properties']['gridProperties'][
                 'rowCount']
-            range_str = '{}!A1:L{}'.format(sheet, max_rows)
+            range_str = '{}!A1:Z{}'.format(sheet, max_rows)
             result = spreadHelper.getSheetValues(SPREAD_SHEET, range_str)
             rows = result['values']
             
-            response = FruitTools.searchInTags(rows, fruit_tags)
+            response_dict = FruitTools.searchInTags(rows, fruit_tags)
             
-            return flask.jsonify(response)
+            return flask.jsonify(response_dict)
         except Exception as e:
             Logs.error('error_getSheet_sheet_info', e)
             return '{"error: "Error calling Sheet, please validate that ' \

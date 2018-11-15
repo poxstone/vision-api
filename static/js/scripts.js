@@ -71,26 +71,16 @@
                     APP.$data.tagsList = tagsList;
                     APP.$data.colorList = colors;
                     
-                    EndpointsImage.getImageSheet(labels).then((imageNutriData) => {
-                        console.log(imageNutriData);
-                        var rows = imageNutriData;
-
-                        if (!rows.length || !rows[0].length || !rows[1].length) {
-                            alert('No se encontraron resultados');
-                            return false;
+                    EndpointsImage.getImageSheet(labels).then((nutriData) => {
+                        console.log(nutriData);
+                        if (nutriData.length) {
+                            nutriData =   [{
+                                title: 'No se encontraron resultados en la hoja de clculo',
+                                value:''
+                            }];
                         }
-                        
-                        var titles = rows[0];
-                        var values = rows[1];
-                        
-                        var nutriList = [];
-                        for (let indx=0;indx < titles.length; indx++ ) {
-                            nutriList.push({
-                                title: titles[indx],
-                                value: values[indx]
-                            })
-                        }
-                        APP.$data.nutriList = nutriList;
+                       
+                        APP.$data.nutriList = nutriData;
                         APP.$data.fruitName = values[1];
                         
                     })
